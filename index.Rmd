@@ -1,0 +1,24 @@
+---
+output:
+  html_document:
+    toc: false
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r, echo=FALSE, message = FALSE}
+library(tidyverse)
+library(lubridate)
+read.csv("BayesDAn_calendar.csv") %>%
+  mutate(Start.Date = dmy(Start.Date),
+         Subject = str_replace_all(Subject, "---", ""),
+         Start.Time = str_replace_all(Start.Time, ":00$", ""),
+         End.Time = str_replace_all(End.Time, ":00$", "")) %>% 
+  select(-End.Date) %>% 
+  spread(Start.Date, Subject, fill = "") %>% 
+  rename(начало = Start.Time,
+         конец = End.Time) %>% 
+  DT::datatable(options = list(pageLength = 7, dom = 'tip', info = FALSE, paging = FALSE), rownames = FALSE)
+```
+
+Расписание можно скачать [в формате `.csv`](https://raw.githubusercontent.com/agricolamz/2019_BayesDAn/master/BayesDAn_calendar.csv) и импортировать в Google Calendar, MS Outlook и т. п.

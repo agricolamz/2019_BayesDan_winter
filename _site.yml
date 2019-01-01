@@ -1,0 +1,40 @@
+name: 'Школа по байесовской статистике'
+navbar:
+  left:
+  - icon: fa-home
+    href: index.html
+  - text: биномиальные данные
+    menu:
+    - text: 1. Распределения
+      href: 01_distributions.html
+    - text: 2. Биномиальные данные
+      href: 02_binomial.html
+    - text: 3. Байесовский доверительный интервал
+      href: 03_bayesian_ci.html
+    - text: 4. Empirical Bayes Estimation
+      href: 04_empirical_bayes.html
+  - text: другие типы данных
+    menu:
+    - text: 5. Распределения
+      href: 05_distributions.html
+    - text: 6. Биномиальные данные
+      href: 06_binomial.html
+    - text: 7. Байесовский доверительный интервал
+      href: 07_bayesian_ci.html
+    - text: 8. Empirical Bayes Estimation
+      href: 08_empirical_bayes.html      
+output_dir: docs
+output:
+  html_document:
+    theme: spacelab
+    highlight: pygments
+    toc: yes
+    toc_position: right
+    toc_depth: 4
+    toc_float: yes
+    smooth_scroll: no
+    df_print: paged
+    include:
+      after_body: footer.html
+    lib_dir: site_libs
+    self_contained: no
