@@ -15,14 +15,14 @@ navbar:
       href: 04_empirical_bayes.html
   - text: другие типы данных
     menu:
-    - text: 5. Распределения
-      href: 05_distributions.html
-    - text: 6. Биномиальные данные
-      href: 06_binomial.html
-    - text: 7. Байесовский доверительный интервал
-      href: 07_bayesian_ci.html
-    - text: 8. Empirical Bayes Estimation
-      href: 08_empirical_bayes.html      
+    - text: 5. Нормальные данные
+      href: 05_normal.html
+    - text: 6. Байесовские гипотезы
+      href: 06_hypotheses.html
+    - text: 7. Введение в MCMC
+      href: 07_mcmc.html
+    - text: 8. Байесовская регрессия
+      href: 08_bayesian_regression.html      
 output_dir: docs
 output:
   html_document:
@@ -36,5 +36,6 @@ output:
     df_print: paged
     include:
       after_body: footer.html
+      before_body: style.css
     lib_dir: site_libs
     self_contained: no

@@ -32,16 +32,30 @@ data_frame(x = 1:100,
   ggplot(aes(x, PDF))+
   geom_point()+
   labs(title = "PDF нормального распределения (μ = 50, sd = 10)")
+```
+
+Какое количество данных лежит в промежутке от 0 до 30?
+```{r}
+pnorm(30, mean = 50, sd = 10)
 data_frame(x = 1:100,
            CDF = pnorm(x, mean = 50, sd = 10)) %>% 
   ggplot(aes(x, CDF))+
   geom_point()+
   labs(title = "CDF нормального распределения (μ = 50, sd = 10)")
+```
+
+Какое значение соответствует 40% квантили?
+```{r}
+qnorm(0.4, mean = 50, sd = 10)
 data_frame(quantiles = seq(0, 1, by = 0.01),
            value = qnorm(quantiles, mean = 50, sd = 10)) %>% 
   ggplot(aes(quantiles, value))+
   geom_point()+
   labs(title = "inverse CDF нормального распределения (μ = 50, sd = 10)")
+```
+
+<strike> Siri, Алиса, </strike> Дорогой R, сгенерируй мне 100 наблюдений из нормального распределения со средним 50 и стандартным отклонением 10.
+```{r}
 data_frame(sample = rnorm(100, mean = 50, sd = 10)) %>% 
   ggplot(aes(sample))+
   geom_histogram()+
@@ -55,7 +69,7 @@ data_frame(sample = rnorm(100, mean = 50, sd = 10)) %>%
 Какое значение имеет 25% квантиль нормального распределения со средним в 20 и стандартным отклонением 90.
 
 ```{r, include=FALSE}
-qnorm(0.025, mean = 20, sd = 90)
+qnorm(0.25, mean = 20, sd = 90)
 ```
 
 <form name="FormOne" onsubmit="return validateFormOne()" method="post">
@@ -306,7 +320,7 @@ dnorm(33, 22, 6)
 <script>
 function validateFormOne() {
     var x = document.forms["FormOne"]["answerOne"].value;
-    if (x != "-156.3968") {
+    if (x != "-40.70408") {
         alert("У меня другой ответ...");
         return false;
     } else {
