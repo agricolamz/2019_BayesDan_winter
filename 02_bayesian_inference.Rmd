@@ -28,7 +28,7 @@ $$P(θ|Data) \propto P(Data|θ)\times P(θ)$$
 
 ## 2. Категориальные данные 
 
-[В датасете c грибами](https://github.com/agricolamz/2019_BayesDan_winter/blob/master/datasets/mushrooms.csv?raw=true) (взят c [kaggle](https://www.kaggle.com/uciml/mushroom-classification)) представлено следующее распределение по месту обитания:
+[В датасете c грибами](https://raw.githubusercontent.com/agricolamz/2019_BayesDan_winter/master/datasets/mushrooms.csv) (взят c [kaggle](https://www.kaggle.com/uciml/mushroom-classification)) представлено следующее распределение по месту обитания:
 
 ```{r}
 df <- read_csv("https://github.com/agricolamz/2019_BayesDan_winter/blob/master/datasets/mushrooms.csv?raw=true")
@@ -62,6 +62,33 @@ data_frame(model = c("edible", "poisonous"),
 ```
 
 ### 2.1
+Вашего друга похитили а на почту отправили [датасет](https://raw.githubusercontent.com/agricolamz/2019_BayesDan_winter/master/datasets/weather.csv), в котором записаны данные о погоде из пяти городов. Ваш телефон зазвонил и друг сказал, что не знает куда его похитили, но за окном легкий дождь (`Rain`). А на следующий день --- сильный дождь (`Thunderstorm`). Сделайте байесовский апдейт и предположите, в какой город вероятнее всего похитили друга (форма принимает латиницу).
+
+```{r, include=FALSE}
+df <- read.csv("https://raw.githubusercontent.com/agricolamz/2019_BayesDan_winter/master/datasets/weather.csv")
+df %>%
+  count(city, events) %>% 
+  group_by(city) %>% 
+  mutate(prop = n/sum(n)) %>% 
+  ggplot(aes(city, prop, fill = events, label = round(prop, 3)))+
+  geom_col()+
+  geom_text(position = position_stack(vjust = 0.5), color = "white")
+
+data_frame(model = c("Auckland", "Beijing", "Chicago", "Mumbai", "San Diego"),
+           prior_1 = 0.2,
+           likelihood_1 = c(0.484, 0, 0.161, 0, 0.29),
+           product_1 = prior_1*likelihood_1,
+           posterior_1 = product_1/sum(product_1),
+           likelihood_2 = c(0.032, 0, 0, 0, 0.065),
+           product_2 = posterior_1*likelihood_2,
+           posterior_2 = product_2/sum(product_2))
+```
+
+<form name="FormOne" onsubmit="return validateFormOne()" method="post">
+<input type="text" name="answerOne">
+<input type="submit" value="check">
+</form>
+
 
 
 ## 3. Биномиальные данные
@@ -124,3 +151,17 @@ shiny::runGitHub("agricolamz/bayes_for_binomial_app")
 
 ## 4. Непрерывные данные
 ### 4.1 Байесовский апдейт нормального распределения
+
+
+<script>
+function validateFormOne() {
+    var x = document.forms["FormOne"]["answerOne"].value;
+    if (x != "San Diego") {
+        alert("У меня другой ответ...");
+        return false;
+    } else {
+        alert("Да, все правильно");
+        return false;
+    }
+}
+</script>

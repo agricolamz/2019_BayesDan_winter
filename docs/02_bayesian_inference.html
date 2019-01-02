@@ -555,7 +555,7 @@ div.tocify {
 <a class="sourceLine" id="cb2-6" data-line-number="6"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(class, prop, <span class="dt">fill =</span> habitat, <span class="dt">label =</span> <span class="kw">round</span>(prop, <span class="dv">3</span>)))<span class="op">+</span></a>
 <a class="sourceLine" id="cb2-7" data-line-number="7"><span class="st">  </span><span class="kw">geom_col</span>()<span class="op">+</span></a>
 <a class="sourceLine" id="cb2-8" data-line-number="8"><span class="st">  </span><span class="kw">geom_text</span>(<span class="dt">position =</span> <span class="kw">position_stack</span>(<span class="dt">vjust =</span> <span class="fl">0.5</span>), <span class="dt">color =</span> <span class="st">&quot;white&quot;</span>)</a></code></pre></div>
-<p><img src="02_binomial_files/figure-html/unnamed-chunk-2-1.png" width="864" /></p>
+<p><img src="02_bayesian_inference_files/figure-html/unnamed-chunk-2-1.png" width="864" /></p>
 <p>Мы нашли некоторый новый вид грибов на лужайке (<code>grasses</code>). Какой это может быть гриб: съедобный или ядовитый? У нас нет никаких идей, почему бы нам отдать предпочтения той или иной гипотезе, так что будем использовать неинформативное априорное распределение:</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="kw">data_frame</span>(<span class="dt">model =</span> <span class="kw">c</span>(<span class="st">&quot;edible&quot;</span>, <span class="st">&quot;poisonous&quot;</span>),</a>
 <a class="sourceLine" id="cb3-2" data-line-number="2">           <span class="dt">prior =</span> <span class="fl">0.5</span>,</a>
@@ -599,7 +599,7 @@ div.tocify {
 <a class="sourceLine" id="cb5-4" data-line-number="4"><span class="st">  </span><span class="kw">geom_point</span>()<span class="op">+</span></a>
 <a class="sourceLine" id="cb5-5" data-line-number="5"><span class="st">  </span><span class="kw">geom_line</span>()<span class="op">+</span></a>
 <a class="sourceLine" id="cb5-6" data-line-number="6"><span class="st">  </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">&quot;Биномиальное распределение p = 0.16, n = 50&quot;</span>)</a></code></pre></div>
-<p><img src="02_binomial_files/figure-html/unnamed-chunk-6-1.png" width="864" /></p>
+<p><img src="02_bayesian_inference_files/figure-html/unnamed-chunk-6-1.png" width="864" /></p>
 </div>
 <div id="-" class="section level3">
 <h3>3.2 Бета распределение</h3>
@@ -612,7 +612,7 @@ div.tocify {
 <a class="sourceLine" id="cb6-4" data-line-number="4"><span class="st">  </span><span class="kw">geom_point</span>()<span class="op">+</span></a>
 <a class="sourceLine" id="cb6-5" data-line-number="5"><span class="st">  </span><span class="kw">geom_line</span>()<span class="op">+</span></a>
 <a class="sourceLine" id="cb6-6" data-line-number="6"><span class="st">  </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">&quot;Бета распределение α = 8, β = 42&quot;</span>)</a></code></pre></div>
-<p><img src="02_binomial_files/figure-html/unnamed-chunk-7-1.png" width="864" /></p>
+<p><img src="02_bayesian_inference_files/figure-html/unnamed-chunk-7-1.png" width="864" /></p>
 <p>Можно поиграть с разными параметрами:</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1">shiny<span class="op">::</span><span class="kw">runGitHub</span>(<span class="st">&quot;agricolamz/beta_distribution_shiny&quot;</span>) </a></code></pre></div>
 <p><span class="math display">\[\mu = \frac{\alpha}{\alpha+\beta}\]</span></p>

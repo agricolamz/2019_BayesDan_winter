@@ -7,8 +7,8 @@ navbar:
     menu:
     - text: 1. Распределения
       href: 01_distributions.html
-    - text: 2. Биномиальные данные
-      href: 02_binomial.html
+    - text: 2. Байесовский апдейт
+      href: 02_bayesian_inference.html
     - text: 3. Байесовский доверительный интервал
       href: 03_bayesian_ci.html
     - text: 4. Empirical Bayes Estimation
