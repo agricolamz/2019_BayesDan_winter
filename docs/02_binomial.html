@@ -12,7 +12,7 @@
 <meta name="author" content="Г. Мороз" />
 
 
-<title>2. Биномиальные данные: введение в байесовский вывод</title>
+<title>2. Байесовский вывод</title>
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -521,7 +521,7 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">2. Биномиальные данные: введение в байесовский вывод</h1>
+<h1 class="title toc-ignore">2. Байесовский вывод</h1>
 <h4 class="author"><em>Г. Мороз</em></h4>
 
 </div>
@@ -529,41 +529,9 @@ div.tocify {
 
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw">library</span>(tidyverse)</a></code></pre></div>
 <div id="-" class="section level2">
-<h2>1. Важные распределения</h2>
-<div id="-" class="section level3">
-<h3>1.1 Биномиальное распределение</h3>
-<p>Биномиальное распределение — распределение количетсва успехов эксперементов Бернулли из <em>n</em> попыток с вероятностью успеха <em>p</em>.</p>
-<p><span class="math display">\[P(k | n, p) = \frac{n!}{k!(n-k)!} \times p^k \times (1-p)^{n-k} =  {n \choose k} \times p^k \times (1-p)^{n-k}\]</span> <span class="math display">\[ 0 \leq p \leq 1; n, k &gt; 0\]</span></p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw">data_frame</span>(<span class="dt">x =</span> <span class="dv">0</span><span class="op">:</span><span class="dv">50</span>,</a>
-<a class="sourceLine" id="cb2-2" data-line-number="2">           <span class="dt">density =</span> <span class="kw">dbinom</span>(<span class="dt">x =</span> x, <span class="dt">size =</span> <span class="dv">50</span>, <span class="dt">prob =</span> <span class="fl">0.16</span>)) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb2-3" data-line-number="3"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(x, density))<span class="op">+</span></a>
-<a class="sourceLine" id="cb2-4" data-line-number="4"><span class="st">  </span><span class="kw">geom_point</span>()<span class="op">+</span></a>
-<a class="sourceLine" id="cb2-5" data-line-number="5"><span class="st">  </span><span class="kw">geom_line</span>()<span class="op">+</span></a>
-<a class="sourceLine" id="cb2-6" data-line-number="6"><span class="st">  </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">&quot;Биномиальное распределение p = 0.16, n = 50&quot;</span>)</a></code></pre></div>
-<p><img src="02_binomial_files/figure-html/unnamed-chunk-2-1.png" width="864" /></p>
-</div>
-<div id="-" class="section level3">
-<h3>1.2 Бета распределение</h3>
-<p><span class="math display">\[P(x; α, β) = \frac{x^{α-1}\times (1-x)^{β-1}}{B(α, β)}; 0 \leq x \leq 1; α, β &gt; 0\]</span></p>
-<p>Бета функция:</p>
-<p><span class="math display">\[Β(α, β) = \frac{Γ(α)\times Γ(β)}{Γ(α+β)} = \frac{(α-1)!(β-1)!}{(α+β-1)!} \]</span></p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="kw">data_frame</span>(<span class="dt">x =</span> <span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dt">length.out =</span> <span class="dv">51</span>),</a>
-<a class="sourceLine" id="cb3-2" data-line-number="2">           <span class="dt">density =</span> <span class="kw">dbeta</span>(<span class="dt">x =</span> x, <span class="dt">shape1 =</span> <span class="dv">8</span>, <span class="dt">shape2 =</span> <span class="dv">42</span>)) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb3-3" data-line-number="3"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(x, density))<span class="op">+</span></a>
-<a class="sourceLine" id="cb3-4" data-line-number="4"><span class="st">  </span><span class="kw">geom_point</span>()<span class="op">+</span></a>
-<a class="sourceLine" id="cb3-5" data-line-number="5"><span class="st">  </span><span class="kw">geom_line</span>()<span class="op">+</span></a>
-<a class="sourceLine" id="cb3-6" data-line-number="6"><span class="st">  </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">&quot;Бета распределение α = 8, β = 42&quot;</span>)</a></code></pre></div>
-<p><img src="02_binomial_files/figure-html/unnamed-chunk-3-1.png" width="864" /></p>
-<p>Можно поиграть с разными параметрами:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1">shiny<span class="op">::</span><span class="kw">runGitHub</span>(<span class="st">&quot;agricolamz/beta_distribution_shiny&quot;</span>) </a></code></pre></div>
-<p><span class="math display">\[\mu = \frac{\alpha}{\alpha+\beta}\]</span></p>
-<p><span class="math display">\[\sigma = \frac{\alpha\times\beta}{(\alpha+\beta)^2\times(\alpha+\beta+1)}\]</span></p>
-</div>
-</div>
-<div id="-" class="section level2">
-<h2>2. Байесовский вывод</h2>
+<h2>1. Байесовский вывод</h2>
 <div class="section level3">
-<h3>2.1 Нотация</h3>
+<h3>1.1 Нотация</h3>
 <p>В байесовском подоходе статистический вывод описывается формулой Байеса</p>
 <p><span class="math display">\[P(θ|Data) = \frac{P(Data|θ)\times P(θ)}{P(Data)}\]</span></p>
 <ul>
@@ -575,15 +543,84 @@ div.tocify {
 <p>В литературе можно еще встретить такую запись:</p>
 <p><span class="math display">\[P(θ|Data) \propto P(Data|θ)\times P(θ)\]</span></p>
 </div>
+</div>
+<div id="-" class="section level2">
+<h2>2. Категориальные данные</h2>
+<p><a href="https://github.com/agricolamz/2019_BayesDan_winter/blob/master/datasets/mushrooms.csv?raw=true">В датасете c грибами</a> (взят c <a href="https://www.kaggle.com/uciml/mushroom-classification">kaggle</a>) представлено следующее распределение по месту обитания:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1">df &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;https://github.com/agricolamz/2019_BayesDan_winter/blob/master/datasets/mushrooms.csv?raw=true&quot;</span>)</a>
+<a class="sourceLine" id="cb2-2" data-line-number="2">df <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb2-3" data-line-number="3"><span class="st">  </span><span class="kw">count</span>(class, habitat) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb2-4" data-line-number="4"><span class="st">  </span><span class="kw">group_by</span>(class) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb2-5" data-line-number="5"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">prop =</span> n<span class="op">/</span><span class="kw">sum</span>(n)) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb2-6" data-line-number="6"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(class, prop, <span class="dt">fill =</span> habitat, <span class="dt">label =</span> <span class="kw">round</span>(prop, <span class="dv">3</span>)))<span class="op">+</span></a>
+<a class="sourceLine" id="cb2-7" data-line-number="7"><span class="st">  </span><span class="kw">geom_col</span>()<span class="op">+</span></a>
+<a class="sourceLine" id="cb2-8" data-line-number="8"><span class="st">  </span><span class="kw">geom_text</span>(<span class="dt">position =</span> <span class="kw">position_stack</span>(<span class="dt">vjust =</span> <span class="fl">0.5</span>), <span class="dt">color =</span> <span class="st">&quot;white&quot;</span>)</a></code></pre></div>
+<p><img src="02_binomial_files/figure-html/unnamed-chunk-2-1.png" width="864" /></p>
+<p>Мы нашли некоторый новый вид грибов на лужайке (<code>grasses</code>). У нас нет никаких данных про то, съедобный он или нет, так что будем использовать неинформативное априорное распределение:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="kw">data_frame</span>(<span class="dt">model =</span> <span class="kw">c</span>(<span class="st">&quot;edible&quot;</span>, <span class="st">&quot;poisonous&quot;</span>),</a>
+<a class="sourceLine" id="cb3-2" data-line-number="2">           <span class="dt">prior =</span> <span class="fl">0.5</span>,</a>
+<a class="sourceLine" id="cb3-3" data-line-number="3">           <span class="dt">likelihood =</span> <span class="kw">c</span>(<span class="fl">0.335</span>, <span class="fl">0.189</span>),</a>
+<a class="sourceLine" id="cb3-4" data-line-number="4">           <span class="dt">product =</span> prior<span class="op">*</span>likelihood,</a>
+<a class="sourceLine" id="cb3-5" data-line-number="5">           <span class="dt">posterior =</span> product<span class="op">/</span><span class="kw">sum</span>(product))</a></code></pre></div>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["model"],"name":[1],"type":["chr"],"align":["left"]},{"label":["prior"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["likelihood"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["product"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["posterior"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"edible","2":"0.5","3":"0.335","4":"0.1675","5":"0.639313"},{"1":"poisonous","2":"0.5","3":"0.189","4":"0.0945","5":"0.360687"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<p>Вот мы и сделали байесовский апдейт. Теперь апостериорное распределение, которые мы получили на предыдущем шаге, мы можем использовать в новом апдейте. Допустим, мы опять нашли этот же вид гриба, но в этот раз в лесу (<code>woods</code>).</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="kw">data_frame</span>(<span class="dt">model =</span> <span class="kw">c</span>(<span class="st">&quot;edible&quot;</span>, <span class="st">&quot;poisonous&quot;</span>),</a>
+<a class="sourceLine" id="cb4-2" data-line-number="2">           <span class="dt">prior =</span> <span class="kw">c</span>(<span class="fl">0.639</span>, <span class="fl">0.361</span>),</a>
+<a class="sourceLine" id="cb4-3" data-line-number="3">           <span class="dt">likelihood =</span> <span class="kw">c</span>(<span class="fl">0.447</span>, <span class="fl">0.324</span>),</a>
+<a class="sourceLine" id="cb4-4" data-line-number="4">           <span class="dt">product =</span> prior<span class="op">*</span>likelihood,</a>
+<a class="sourceLine" id="cb4-5" data-line-number="5">           <span class="dt">posterior =</span> product<span class="op">/</span><span class="kw">sum</span>(product))</a></code></pre></div>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["model"],"name":[1],"type":["chr"],"align":["left"]},{"label":["prior"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["likelihood"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["product"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["posterior"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"edible","2":"0.639","3":"0.447","4":"0.285633","5":"0.7094762"},{"1":"poisonous","2":"0.361","3":"0.324","4":"0.116964","5":"0.2905238"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+<div id="-" class="section level2">
+<h2>3. Биномиальные данные</h2>
+<p>Биномиальные данные возникают, когда нас интересует доля успехов в какой-то серии эксперементов Бернулли.</p>
 <div id="-" class="section level3">
-<h3>2.1 Биномиальные данные</h3>
+<h3>3.1 Биномиальное распределение</h3>
+<p>Биномиальное распределение — распределение количетсва успехов эксперементов Бернулли из <em>n</em> попыток с вероятностью успеха <em>p</em>.</p>
+<p><span class="math display">\[P(k | n, p) = \frac{n!}{k!(n-k)!} \times p^k \times (1-p)^{n-k} =  {n \choose k} \times p^k \times (1-p)^{n-k}\]</span> <span class="math display">\[ 0 \leq p \leq 1; n, k &gt; 0\]</span></p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="kw">data_frame</span>(<span class="dt">x =</span> <span class="dv">0</span><span class="op">:</span><span class="dv">50</span>,</a>
+<a class="sourceLine" id="cb5-2" data-line-number="2">           <span class="dt">density =</span> <span class="kw">dbinom</span>(<span class="dt">x =</span> x, <span class="dt">size =</span> <span class="dv">50</span>, <span class="dt">prob =</span> <span class="fl">0.16</span>)) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb5-3" data-line-number="3"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(x, density))<span class="op">+</span></a>
+<a class="sourceLine" id="cb5-4" data-line-number="4"><span class="st">  </span><span class="kw">geom_point</span>()<span class="op">+</span></a>
+<a class="sourceLine" id="cb5-5" data-line-number="5"><span class="st">  </span><span class="kw">geom_line</span>()<span class="op">+</span></a>
+<a class="sourceLine" id="cb5-6" data-line-number="6"><span class="st">  </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">&quot;Биномиальное распределение p = 0.16, n = 50&quot;</span>)</a></code></pre></div>
+<p><img src="02_binomial_files/figure-html/unnamed-chunk-5-1.png" width="864" /></p>
+</div>
+<div id="-" class="section level3">
+<h3>3.2 Бета распределение</h3>
+<p><span class="math display">\[P(x; α, β) = \frac{x^{α-1}\times (1-x)^{β-1}}{B(α, β)}; 0 \leq x \leq 1; α, β &gt; 0\]</span></p>
+<p>Бета функция:</p>
+<p><span class="math display">\[Β(α, β) = \frac{Γ(α)\times Γ(β)}{Γ(α+β)} = \frac{(α-1)!(β-1)!}{(α+β-1)!} \]</span></p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="kw">data_frame</span>(<span class="dt">x =</span> <span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dt">length.out =</span> <span class="dv">51</span>),</a>
+<a class="sourceLine" id="cb6-2" data-line-number="2">           <span class="dt">density =</span> <span class="kw">dbeta</span>(<span class="dt">x =</span> x, <span class="dt">shape1 =</span> <span class="dv">8</span>, <span class="dt">shape2 =</span> <span class="dv">42</span>)) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb6-3" data-line-number="3"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(x, density))<span class="op">+</span></a>
+<a class="sourceLine" id="cb6-4" data-line-number="4"><span class="st">  </span><span class="kw">geom_point</span>()<span class="op">+</span></a>
+<a class="sourceLine" id="cb6-5" data-line-number="5"><span class="st">  </span><span class="kw">geom_line</span>()<span class="op">+</span></a>
+<a class="sourceLine" id="cb6-6" data-line-number="6"><span class="st">  </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">&quot;Бета распределение α = 8, β = 42&quot;</span>)</a></code></pre></div>
+<p><img src="02_binomial_files/figure-html/unnamed-chunk-6-1.png" width="864" /></p>
+<p>Можно поиграть с разными параметрами:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1">shiny<span class="op">::</span><span class="kw">runGitHub</span>(<span class="st">&quot;agricolamz/beta_distribution_shiny&quot;</span>) </a></code></pre></div>
+<p><span class="math display">\[\mu = \frac{\alpha}{\alpha+\beta}\]</span></p>
+<p><span class="math display">\[\sigma = \frac{\alpha\times\beta}{(\alpha+\beta)^2\times(\alpha+\beta+1)}\]</span></p>
+</div>
+<div id="---" class="section level3">
+<h3>3.3 Байесовский апдейт биномиальных данных</h3>
 <p><span class="math display">\[Beta_{post}(\alpha_{post}, \beta_{post}) = Beta(\alpha_{prior}+\alpha_{data}, \beta_{prior}+\beta_{data}),\]</span> где <span class="math inline">\(Beta\)</span> — это бета распределение</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1">shiny<span class="op">::</span><span class="kw">runGitHub</span>(<span class="st">&quot;agricolamz/bayes_for_binomial_app&quot;</span>) </a></code></pre></div>
-<p>Подробнее см.:</p>
-<ul>
-<li>2 главу Robinson D. (2017) Introduction To Empirical Bayes</li>
-<li>раздел 2.5 в Gelman A. et. al (2014) Bayesian Data Analysis</li>
-</ul>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1">shiny<span class="op">::</span><span class="kw">runGitHub</span>(<span class="st">&quot;agricolamz/bayes_for_binomial_app&quot;</span>) </a></code></pre></div>
+</div>
+</div>
+<div id="-" class="section level2">
+<h2>4. Непрерывные данные</h2>
+<div id="---" class="section level3">
+<h3>4.1 Байесовский апдейт нормального распределения</h3>
 </div>
 </div>
 
