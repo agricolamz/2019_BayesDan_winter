@@ -141,7 +141,7 @@ data_frame(x = 0:50,
 
 #### 2.3.1
 
-Используя вот [этот датасет](https://github.com/agricolamz/2019_BayesDan_winter/raw/master/datasets/awards.csv) и функцию `glm()` с аргументом `family=poisson` постройте регрессию, предсказывающую количество наград (`num_awards`), которые получат студенты на основе типа программы (prog) и оценки их экзамена по математике (`math`).
+Используя вот [этот датасет](https://github.com/agricolamz/2019_BayesDan_winter/raw/master/datasets/awards.csv) и функцию `glm()` с аргументом `family=poisson` постройте регрессию, предсказывающую количество наград (`num_awards`), которые получат студенты на основе типа программы (`prog`) и оценки их экзамена по математике (`math`).
 
 ```{r, include = FALSE}
 df <- read_csv("https://github.com/agricolamz/2019_BayesDan_winter/raw/master/datasets/awards.csv")
