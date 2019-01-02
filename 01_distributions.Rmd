@@ -139,6 +139,24 @@ data_frame(x = 0:50,
   labs(title = "Распределение Пуасона с мат. ожиданием λ = 5")
 ```
 
+#### 2.3.1
+
+Используя вот [этот датасет](https://github.com/agricolamz/2019_BayesDan_winter/raw/master/datasets/awards.csv) и функцию `glm()` с аргументом `family=poisson` постройте регрессию, предсказывающую количество наград (`num_awards`), которые получат студенты на основе типа программы (prog) и оценки их экзамена по математике (`math`).
+
+```{r, include = FALSE}
+df <- read_csv("https://github.com/agricolamz/2019_BayesDan_winter/raw/master/datasets/awards.csv")
+model <- glm(num_awards~prog+math, data = df, family = poisson)
+```
+
+```{r}
+df %>% 
+  mutate(predictions = predict(model, type = "response")) %>% 
+  ggplot(aes(x = math, y = predictions, color = prog)) +
+  geom_point(aes(y = num_awards), alpha=.5, position=position_jitter(h=.2)) +
+  geom_line(size = 1) +
+  labs(x = "Math Score", y = "Expected number of awards")
+```
+
 
 ### 2.4 Мультиномиальное распределение
 
