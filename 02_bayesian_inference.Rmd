@@ -121,7 +121,7 @@ $$Β(α, β) = \frac{Γ(α)\times Γ(β)}{Γ(α+β)} = \frac{(α-1)!(β-1)!}{(α
 
 
 ```{r}
-data_frame(x = seq(0, 1, length.out = 51),
+data_frame(x = seq(0, 1, length.out = 100),
            density = dbeta(x = x, shape1 = 8, shape2 = 42)) %>% 
   ggplot(aes(x, density))+
   geom_point()+
@@ -149,14 +149,195 @@ $$Beta_{post}(\alpha_{post}, \beta_{post}) = Beta(\alpha_{prior}+\alpha_{data}, 
 shiny::runGitHub("agricolamz/bayes_for_binomial_app") 
 ```
 
-## 4. Непрерывные данные
-### 4.1 Байесовский апдейт нормального распределения
 
+### 3.3 Байесовский апдейт биномиальных данных: несколько моделей
+
+
+```{r}
+data_frame(x = rep(seq(0, 1, length.out = 100), 6),
+           density = c(dbeta(unique(x), shape1 = 8, shape2 = 42),
+                       dbeta(unique(x), shape1 = 16, shape2 = 34),
+                       dbeta(unique(x), shape1 = 24, shape2 = 26),
+                       dbeta(unique(x), shape1 = 8+4, shape2 = 42+16),
+                       dbeta(unique(x), shape1 = 16+4, shape2 = 34+16),
+                       dbeta(unique(x), shape1 = 24+4, shape2 = 26+16)),
+           type = rep(c("prior", "prior", "prior", "posterior", "posterior", "posterior"), each = 100),
+           dataset = rep(c("prior: 8, 42", "prior: 16, 34", "prior: 24, 26",
+                           "prior: 8, 42", "prior: 16, 34", "prior: 24, 26"), each = 100)) %>% 
+  ggplot(aes(x, density, color = type))+
+  geom_line()+
+  facet_wrap(~dataset)+
+  labs(title = "data = 4, 16")
+```
+
+
+### 3.4
+В базе данных [Phoible](http://phoible.org/), в которой собраны фонологические инвентари в языках мира. В [датасет](https://raw.githubusercontent.com/agricolamz/2019_BayesDan_winter/master/datasets/phoible_n_consonants.csv) записано три переменных:
+
+* language --- язык;
+* consonants --- количество согласных;
+* phonemes --- количество фонем.
+
+Посчитайте долю, которую составляет согласные от всего фонологического набора каждого языка и укажите название языка, в котором эта доля максимальна.
+
+```{r, include=FALSE}
+df <- read_csv("https://raw.githubusercontent.com/agricolamz/2019_BayesDan_winter/master/datasets/phoible_n_consonants.csv")
+df %>% 
+  mutate(ratio = consonants/phonemes) ->
+  df
+
+df %>% 
+  filter(ratio == max(ratio)) %>% 
+  select(language)
+```
+
+<form name="FormTwo" onsubmit="return validateFormTwo()" method="post">
+<input type="text" name="answerTwo">
+<input type="submit" value="check">
+</form>
+
+Проведите байесовский апдейт наблюдений каждого языка, используя в качестве априорного распределения бета распределение с параметрами α = 9.300246, и β = 4.4545. Посчитайте модуль разницы между апостериорной долей и изначальной долей представленной в данных. В ответе укажите язык с наибольшей разницей.
+
+```{r, include=FALSE}
+alpha0 <- 9.300246
+beta0 <- 4.4545
+
+df %>% 
+  mutate(alpha = consonants + alpha0,
+         beta = phonemes - consonants + beta0,
+         posterior_mean = alpha/(alpha+beta),
+         diff = abs(posterior_mean - ratio)) %>% 
+  arrange(desc(diff)) %>% 
+  select(language)
+```
+
+<form name="FormThree" onsubmit="return validateFormThree()" method="post">
+<input type="text" name="answerThree">
+<input type="submit" value="check">
+</form>
+
+## 4. Нормальное распределение
+
+Встроенный датасет `ChickWeight` содержит вес цыплят (`weight`) в зависимости от типа диеты (`Diet`). Мы будем анализировать 20 дневных птенцов.
+
+```{r}
+ChickWeight %>% 
+  filter(Time == 20) ->
+  chicks
+
+chicks %>% 
+  ggplot(aes(weight))+
+  geom_density()
+```
+
+Начнем с апостериорных параметров для наблюдений $x_1, ... x_n$ со средним $\mu_{data}$ известной дисперсией $\sigma_{known}^2$
+
+
+### 4.1 Байесовский апдейт нормального распределения: дискретный вариант
+
+Мы можем рассматривать эту задачу как выбор между несколькими моделями с разными средними:
+
+```{r}
+data_frame(x = rep(1:400, 6),
+           density = c(dnorm(unique(x), mean = 125, sd = 70),
+                       dnorm(unique(x), mean = 150, sd = 70),
+                       dnorm(unique(x), mean = 175, sd = 70),
+                       dnorm(unique(x), mean = 200, sd = 70),
+                       dnorm(unique(x), mean = 225, sd = 70),
+                       dnorm(unique(x), mean = 250, sd = 70)),
+           dataset = rep(1:6, each = 400)) %>% 
+  ggplot(aes(x, density, color = factor(dataset)))+
+  geom_line()
+```
+
+Дальше мы можем точно так же апдейтить, как мы делали раньше:
+
+```{r}
+data_frame(mu = seq(125, 250, by = 25),
+           prior = 0.2,
+           likelihood = c(prod(dnorm(chicks$weight, mean = 125, sd = 70)),
+                          prod(dnorm(chicks$weight, mean = 150, sd = 70)),
+                          prod(dnorm(chicks$weight, mean = 175, sd = 70)),
+                          prod(dnorm(chicks$weight, mean = 200, sd = 70)),
+                          prod(dnorm(chicks$weight, mean = 225, sd = 70)),
+                          prod(dnorm(chicks$weight, mean = 250, sd = 70))),
+           product = prior*likelihood,
+           posterior = product/sum(product)) ->
+  results
+results
+results %>% 
+  select(mu, prior, posterior) %>% 
+  gather(type, probability, prior:posterior) %>% 
+  ggplot(aes(mu, probability, color = type))+
+  geom_point()+
+  labs(title = "изменеие вероятностей для каждой из моделей",
+       x = "μ")
+```
+
+
+
+### 4.2 Байесовский апдейт нормального распределения: непрерывный вариант
+
+Во первых, нам понадобиться некоторая мера, которая называется *точность* (precision):
+
+$$\tau = \frac{1}{\sigma^2}$$
+
+$$\tau_{post} = \tau_{prior} + \tau_{data} \Rightarrow \sigma^2_{post} = \frac{1}{\tau_{post}}$$
+
+
+$$\mu_{post} = \frac{\mu_{prior} \times \tau_{prior} + \mu_{data} \times \tau_{data}}{\tau_{post}}$$
+
+Так что если нашим априорным распределением мы назовем нормальное распределение со средним около 180 и стандартным отклонением 90, то процесс байсовского апдейта будет выглядеть вот так:
+
+```{r}
+sd_prior <- 90 
+sd_data <- sd(chicks$weight)
+sd_post <- (1/sd_prior+1/sd_data)^(-1)
+mean_prior <- 180
+mean_data <- mean(chicks$weight)
+mean_post <- weighted.mean(c(mean_prior, mean_data), c(1/sd_prior, 1/sd_data))
+
+data_frame(x = rep(1:400, 3),
+           density = c(dnorm(unique(x), mean = mean_prior, sd = sd_prior),
+                       dnorm(unique(x), mean = mean_data, sd = sd_data),
+                       dnorm(unique(x), mean = mean_post, sd = sd_post)),
+           dataset = rep(c("prior", "data", "posterior"), each = 400)) %>% 
+  ggplot(aes(x, density, color = dataset))+
+  geom_line()
+```
+
+```{r, eval = FALSE}
+shiny::runGitHub("agricolamz/bayes_for_normal_app") 
+```
+
+### 4.3
+
+Здесь нужно задание.
 
 <script>
 function validateFormOne() {
     var x = document.forms["FormOne"]["answerOne"].value;
     if (x != "San Diego") {
+        alert("У меня другой ответ...");
+        return false;
+    } else {
+        alert("Да, все правильно");
+        return false;
+    }
+}
+function validateFormTwo() {
+    var x = document.forms["FormTwo"]["answerTwo"].value;
+    if (x != "Moroccan Arabic") {
+        alert("У меня другой ответ...");
+        return false;
+    } else {
+        alert("Да, все правильно");
+        return false;
+    }
+}
+function validateFormThree() {
+    var x = document.forms["FormThree"]["answerThree"].value;
+    if (x != "Karaja") {
         alert("У меня другой ответ...");
         return false;
     } else {
