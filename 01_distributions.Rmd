@@ -5,14 +5,7 @@ editor_options:
   chunk_output_type: console
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(message = FALSE, warning = FALSE, comment = "")
-options(scipen=999)
-ggplot2::theme_set(ggplot2::theme_bw())
-```
-
-```{r, message=FALSE}
-library(tidyverse)
+```{r child = 'preamble.Rmd'}
 ```
 
 ## 1. Распределения в R
@@ -348,7 +341,31 @@ $$L\left(X \sim \mathcal{N}(\mu = 22,\, \sigma^{2}=6)|x = 33\right) = ...$$
 dnorm(33, 22, 6)
 ```
 
-В итоге:
+В результате мы можем пострить график, который будет правдоподобие моделей с разными средними и фиксированным стандартным отклонением.
+
+```{r}
+data_frame(x = 0:80) %>% 
+  ggplot(aes(x)) +
+  stat_function(fun = function(x) dnorm(33, x, 6))+
+  scale_x_continuous(breaks = c(0:4*20, 33))+
+  labs(x = TeX("$\\mu$"),
+       y = TeX("$L(N(\\mu,\\, \\sigma^{2}=6)|x = 33))$"),
+       title = "Насколько правдоподобны модели с разными μ, если мы наблюдаем значение 33?")
+```
+
+А что если у нас не одно наблюдение, а несколько? Например, мы наблюдаем языки с 33 и 26 согласными? События независимы друг от друга, значит, мы можем перемножить получаемые вероятности.
+
+```{r}
+data_frame(x = 0:80) %>% 
+  ggplot(aes(x)) +
+  stat_function(fun = function(x) dnorm(33, x, 6)*dnorm(26, x, 6))+
+  scale_x_continuous(breaks = c(0:4*20, 33, 26))+
+  labs(x = TeX("$\\mu$"),
+       y = TeX("$L(N(\\mu,\\, \\sigma^{2}=6)|x = 33))$"),
+       title = "Насколько правдоподобны модели с разными μ, если мы наблюдаем значения 26 и 33?")
+```
+
+**Самое важное:**
 
 * вероятность --- P(data|distribution)
 * правдоподобие --- L(distribution|data)
