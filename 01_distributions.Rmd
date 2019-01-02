@@ -225,10 +225,11 @@ data_frame(x = 1:100,
 ### 3.3 Экспоненциальное распределение
 
 $$P(x)= \lambda \times e^{-\lambda x}$$
+$$\lambda > 0$$
 
 ```{r}
 data_frame(x = 1:20,
-           PDF = dexp(x = x, rate = 5)) %>% 
+           PDF = dexp(x = x, rate = 0.5)) %>% 
   ggplot(aes(x, PDF))+
   geom_point()+
   geom_line()+
@@ -276,6 +277,13 @@ data_frame(x = 0:80) %>%
 
 ### 4.1 Бета распределение
 
+$$P(x; α, β) = \frac{x^{α-1}\times (1-x)^{β-1}}{B(α, β)}; 0 \leq x \leq 1; α, β > 0$$
+
+Бета функция:
+
+$$Β(α, β) = \frac{Γ(α)\times Γ(β)}{Γ(α+β)} = \frac{(α-1)!(β-1)!}{(α+β-1)!} $$
+
+
 ```{r}
 data_frame(x = seq(0, 1, length.out = 51),
            density = dbeta(x = x, shape1 = 8, shape2 = 42)) %>% 
@@ -284,6 +292,17 @@ data_frame(x = seq(0, 1, length.out = 51),
   geom_line()+
   labs(title = "Бета распределение α = 8, β = 42")
 ```
+
+Можно поиграть с разными параметрами:
+
+```{r, eval = FALSE}
+shiny::runGitHub("agricolamz/beta_distribution_shiny") 
+```
+
+$$\mu = \frac{\alpha}{\alpha+\beta}$$
+
+$$\sigma = \frac{\alpha\times\beta}{(\alpha+\beta)^2\times(\alpha+\beta+1)}$$
+
 
 ### 4.2 Нормальное распределение
 
