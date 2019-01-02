@@ -55,10 +55,10 @@ data_frame(model = c("edible", "poisonous"),
 
 ```{r}
 data_frame(model = c("edible", "poisonous"),
-           prior = c(0.639, 0.361),
-           likelihood = c(0.447, 0.324),
-           product = prior*likelihood,
-           posterior = product/sum(product))
+           prior_2 = c(0.639, 0.361),
+           likelihood_2 = c(0.447, 0.324),
+           product_2 = prior_2*likelihood_2,
+           posterior_2 = product_2/sum(product_2))
 ```
 
 ### 2.1

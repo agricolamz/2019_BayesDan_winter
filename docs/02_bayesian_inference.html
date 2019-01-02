@@ -569,13 +569,13 @@ div.tocify {
 </div>
 <p>Вот мы и сделали байесовский апдейт. Теперь апостериорное распределение, которые мы получили на предыдущем шаге, мы можем использовать в новом апдейте. Допустим, мы опять нашли этот же вид гриба, но в этот раз в лесу (<code>woods</code>).</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="kw">data_frame</span>(<span class="dt">model =</span> <span class="kw">c</span>(<span class="st">&quot;edible&quot;</span>, <span class="st">&quot;poisonous&quot;</span>),</a>
-<a class="sourceLine" id="cb4-2" data-line-number="2">           <span class="dt">prior =</span> <span class="kw">c</span>(<span class="fl">0.639</span>, <span class="fl">0.361</span>),</a>
-<a class="sourceLine" id="cb4-3" data-line-number="3">           <span class="dt">likelihood =</span> <span class="kw">c</span>(<span class="fl">0.447</span>, <span class="fl">0.324</span>),</a>
-<a class="sourceLine" id="cb4-4" data-line-number="4">           <span class="dt">product =</span> prior<span class="op">*</span>likelihood,</a>
-<a class="sourceLine" id="cb4-5" data-line-number="5">           <span class="dt">posterior =</span> product<span class="op">/</span><span class="kw">sum</span>(product))</a></code></pre></div>
+<a class="sourceLine" id="cb4-2" data-line-number="2">           <span class="dt">prior_2 =</span> <span class="kw">c</span>(<span class="fl">0.639</span>, <span class="fl">0.361</span>),</a>
+<a class="sourceLine" id="cb4-3" data-line-number="3">           <span class="dt">likelihood_2 =</span> <span class="kw">c</span>(<span class="fl">0.447</span>, <span class="fl">0.324</span>),</a>
+<a class="sourceLine" id="cb4-4" data-line-number="4">           <span class="dt">product_2 =</span> prior_<span class="dv">2</span><span class="op">*</span>likelihood_<span class="dv">2</span>,</a>
+<a class="sourceLine" id="cb4-5" data-line-number="5">           <span class="dt">posterior_2 =</span> product_<span class="dv">2</span><span class="op">/</span><span class="kw">sum</span>(product_<span class="dv">2</span>))</a></code></pre></div>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
-{"columns":[{"label":["model"],"name":[1],"type":["chr"],"align":["left"]},{"label":["prior"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["likelihood"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["product"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["posterior"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"edible","2":"0.639","3":"0.447","4":"0.285633","5":"0.7094762"},{"1":"poisonous","2":"0.361","3":"0.324","4":"0.116964","5":"0.2905238"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["model"],"name":[1],"type":["chr"],"align":["left"]},{"label":["prior_2"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["likelihood_2"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["product_2"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["posterior_2"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"edible","2":"0.639","3":"0.447","4":"0.285633","5":"0.7094762"},{"1":"poisonous","2":"0.361","3":"0.324","4":"0.116964","5":"0.2905238"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 <div id="section" class="section level3">
