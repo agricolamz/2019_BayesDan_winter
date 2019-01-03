@@ -5,13 +5,16 @@ editor_options:
   chunk_output_type: console
 ---
 
-```{r child = 'preamble.Rmd'}
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(message = FALSE, warning = FALSE, comment = "", fig.width = 9)
+ggplot2::theme_set(ggplot2::theme_bw())
+library(latex2exp)
 ```
 
 ```{r}
 library(mosaic)
+library(tidyverse)
 ```
-
 
 ## 1. Фриквентистские доверительные интервалы
 
@@ -158,69 +161,23 @@ df %>%
 
 ```{r, fig.height=7}
 chekhov %>% 
-  filter(word == "не") %>%
-  group_by(titles) %>% 
+  slice(1:30) %>%
+  group_by(trunc_titles) %>% 
   mutate(beta_prior = n_words-n,
          alpha_post = n + 5.283022,
          beta_post = beta_prior + 231.6328,
          average_post = alpha_post/(alpha_post+beta_post),
          cred_int_l = qbeta(.025, alpha_post, beta_post),
-         cred_int_h = qbeta(.975, alpha_post, beta_post))
-  
-  
-  
-  slice(1:30) %>% 
-  mutate(alpha_post = n+alpha0,
-         beta_post = n_words-n+beta0,
-         average_post = alpha_post/(alpha_post+beta_post),
-         cred_int_l = qbeta(.025, alpha_post, beta_post),
-         cred_int_h = qbeta(.975, alpha_post, beta_post)) ->
-  posterior
-
-posterior %>% 
-  select(titles, n_words, average, average_post) %>% 
-  arrange(n_words)
-
-posterior %>% 
-  ggplot(aes(trunc_titles, average_post, ymin = cred_int_l, ymax = cred_int_h))+
-  geom_pointrange()+
+         cred_int_h = qbeta(.975, alpha_post, beta_post),
+         low_ci = binom.test(x = n, n = n_words)$conf.int[1],
+         up_ci = binom.test(x = n, n = n_words)$conf.int[2]) %>% 
+  ggplot(aes(x= trunc_titles))+
+  geom_pointrange(aes(y = average, ymin = low_ci, ymax = up_ci), color = "tomato")+
+  geom_pointrange(aes(y = average_post, ymin = cred_int_l, ymax = cred_int_h), color = "darkturquoise", position = "jitter")+
   coord_flip()+
-  theme_bw()
-```
-
-```{r, echo= FALSE, fig.height=7, eval=FALSE}
-chekhov %>% 
-  filter(word == "не") %>%
-  slice(1:30) %>% 
-  group_by(titles) %>% 
-  mutate(low_ci = binom.test(x = n, n = n_words)$conf.int[1],
-         up_ci = binom.test(x = n, n = n_words)$conf.int[2],
-         interval = "confidence") %>% 
-  ungroup() %>% 
-  select(trunc_titles, low_ci, up_ci, interval, average)->
-  df_1
-
-chekhov %>% 
-  filter(word == "не") %>%
-  slice(1:30) %>% 
-  group_by(titles) %>% 
-  mutate(alpha_post = n+alpha0,
-         beta_post = n_words-n+beta0,
-         average = alpha_post/(alpha_post+beta_post),
-         low_ci = qbeta(.025, alpha_post, beta_post),
-         up_ci = qbeta(.975, alpha_post, beta_post),
-         interval = "credible") %>% 
-  ungroup() %>% 
-  select(trunc_titles, low_ci, up_ci, interval, average)->
-  df_2
-
-rbind(df_1, df_2) %>% 
-  ggplot(aes(trunc_titles, y = average, ymin = low_ci, ymax = up_ci, color = interval)) +
-  geom_errorbar()+
-  geom_point()+
-  coord_flip()+
-  theme_bw()+
-  xlab("")
+  labs(title = 'Доверительные интервалы употребления "не" в рассказах А. Чехова',
+       x = "", y = "",
+       caption = "красные --- фриквентистский; голубой --- байесовский")
 ```
 
 <script>
