@@ -580,7 +580,7 @@ div.tocify {
 </div>
 <div id="section" class="section level3">
 <h3>2.1</h3>
-<p>Вашего друга похитили а на почту отправили <a href="https://raw.githubusercontent.com/agricolamz/2019_BayesDan_winter/master/datasets/weather.csv">датасет</a>, в котором записаны данные о погоде из пяти городов. Ваш телефон зазвонил и друг сказал, что не знает куда его похитили, но за окном легкий дождь (<code>Rain</code>). А на следующий день — сильный дождь (<code>Thunderstorm</code>). Сделайте байесовский апдейт и предположите, в какой город вероятнее всего похитили друга (форма принимает латиницу).</p>
+<p>Вашего друга похитили а на почту отправили <a href="https://raw.githubusercontent.com/agricolamz/2019_BayesDan_winter/master/datasets/weather.csv">датасет</a>, в котором записаны данные о погоде из пяти городов. Ваш телефон зазвонил, и друг сказал, что не знает куда его похитили, но за окном легкий дождь (<code>Rain</code>). А на следующий день — сильный дождь (<code>Thunderstorm</code>). Сделайте байесовский апдейт и предположите, в какой город вероятнее всего похитили друга (форма принимает латиницу).</p>
 <form name="FormOne" onsubmit="return validateFormOne()" method="post">
 <input type="text" name="answerOne"> <input type="submit" value="check">
 </form>
@@ -738,7 +738,17 @@ div.tocify {
 </div>
 <div id="section-2" class="section level3">
 <h3>4.3</h3>
-<p>Здесь нужно задание</p>
+<p>В <a href="https://raw.githubusercontent.com/agricolamz/2019_BayesDan_winter/master/datasets/phoible_n_consonants.csv">датасет</a> записаны данные по исследованию мочи [Andrews, Herzberg 1985]. В переменной <code>pH</code> записано значение уровня кислотности. Сделайте байесовский апдейт наблюдаемых данных, используя априорное распределение <span class="math inline">\(\mathcal{N}(\mu = 9, \sigma^2 = 2)\)</span>.</p>
+<p>Укажите апостериорное стандартное отклонение:</p>
+<form name="FormFour" onsubmit="return validateFormFour()" method="post">
+<input type="text" name="answerFour"> <input type="submit" value="check">
+</form>
+<p>Укажите апостериорное среднее:</p>
+<form name="FormFive" onsubmit="return validateFormFive()" method="post">
+<input type="text" name="answerFive"> <input type="submit" value="check">
+</form>
+<p>Попробуйте визуализировать:</p>
+<p><img src="02_bayesian_inference_files/figure-html/unnamed-chunk-18-1.png" width="864" /></p>
 <script>
 function validateFormOne() {
     var x = document.forms["FormOne"]["answerOne"].value;
@@ -764,6 +774,26 @@ function validateFormThree() {
     var x = document.forms["FormThree"]["answerThree"].value;
     if (x != "Karaja") {
         alert("У меня другой ответ...");
+        return false;
+    } else {
+        alert("Да, все правильно");
+        return false;
+    }
+}
+function validateFormFour() {
+    var x = document.forms["FormFour"]["answerFour"].value;
+    if (x != "0.5317367") {
+        alert("У меня другой ответ... в нем 7 знаков после запятой");
+        return false;
+    } else {
+        alert("Да, все правильно");
+        return false;
+    }
+}
+function validateFormFive() {
+    var x = document.forms["FormFive"]["answerFive"].value;
+    if (x != "6.818514") {
+        alert("У меня другой ответ... в нем 6 знаков после запятой");
         return false;
     } else {
         alert("Да, все правильно");

@@ -312,7 +312,42 @@ shiny::runGitHub("agricolamz/bayes_for_normal_app")
 
 ### 4.3
 
-Здесь нужно задание.
+В [датасет](https://raw.githubusercontent.com/agricolamz/2019_BayesDan_winter/master/datasets/phoible_n_consonants.csv) записаны данные по исследованию мочи [Andrews, Herzberg 1985]. В переменной `pH` записано значение уровня кислотности. Сделайте байесовский апдейт наблюдаемых данных, используя априорное распределение $\mathcal{N}(\mu = 9, \sigma^2 = 2)$.
+
+Укажите апостериорное стандартное отклонение:
+
+<form name="FormFour" onsubmit="return validateFormFour()" method="post">
+<input type="text" name="answerFour">
+<input type="submit" value="check">
+</form>
+
+Укажите апостериорное среднее:
+
+<form name="FormFive" onsubmit="return validateFormFive()" method="post">
+<input type="text" name="answerFive">
+<input type="submit" value="check">
+</form>
+
+Попробуйте визуализировать:
+
+```{r, echo = FALSE}
+urine <- read_csv("https://raw.githubusercontent.com/agricolamz/2019_BayesDan_winter/master/datasets/urine.csv")
+
+sd_prior <- 2 
+sd_data <- sd(urine$ph)
+sd_post <- (1/sd_prior+1/sd_data)^(-1)
+mean_prior <- 9
+mean_data <- mean(urine$ph)
+mean_post <- weighted.mean(c(mean_prior, mean_data), c(1/sd_prior, 1/sd_data))
+
+data_frame(x = rep(seq(0, 17, by = 0.1), 3),
+           density = c(dnorm(unique(x), mean = mean_prior, sd = sd_prior),
+                       dnorm(unique(x), mean = mean_data, sd = sd_data),
+                       dnorm(unique(x), mean = mean_post, sd = sd_post)),
+           dataset = rep(c("prior", "data", "posterior"), each = 171)) %>% 
+  ggplot(aes(x, density, color = dataset))+
+  geom_line()
+```
 
 <script>
 function validateFormOne() {
@@ -339,6 +374,26 @@ function validateFormThree() {
     var x = document.forms["FormThree"]["answerThree"].value;
     if (x != "Karaja") {
         alert("У меня другой ответ...");
+        return false;
+    } else {
+        alert("Да, все правильно");
+        return false;
+    }
+}
+function validateFormFour() {
+    var x = document.forms["FormFour"]["answerFour"].value;
+    if (x != "0.5317367") {
+        alert("У меня другой ответ... в нем 7 знаков после запятой");
+        return false;
+    } else {
+        alert("Да, все правильно");
+        return false;
+    }
+}
+function validateFormFive() {
+    var x = document.forms["FormFive"]["answerFive"].value;
+    if (x != "6.818514") {
+        alert("У меня другой ответ... в нем 6 знаков после запятой");
         return false;
     } else {
         alert("Да, все правильно");
