@@ -6,3 +6,13 @@ editor_options:
   chunk_output_type: console
 ---
 
+## Пакеты:
+
+```{r}
+library(tidyverse)
+library(shiny)
+```
+
+## Расписание
+
+[висит здесь](https://docs.google.com/spreadsheets/d/15oOveC5ixr7sv_y1WgZWw-5iav4vuM6tfsAGUMGAVCE/edit#gid=1514187822)
