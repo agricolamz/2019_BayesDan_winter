@@ -16,7 +16,7 @@ navbar:
     - text: 4. Empirical Bayes Estimation
       href: 04_empirical_bayes.html
     - text: 5. Байесовские фактор
-      href: 05_bayesian_factor.html
+      href: 05_bayes_factor.html
     - text: 6. Введение в MCMC
       href: 06_mcmc.html
   - text: день третий
