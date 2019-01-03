@@ -1,0 +1,123 @@
+---
+title: "3. Байесовский доверительный интервал"
+author: "Г. Мороз"
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r child = 'preamble.Rmd'}
+```
+
+## 1. Фриквентистские доверительные интервалы
+
+Интерпретация доверительных интервалов не легкое дело. Если вы знакомы с этим понятием и считаете, что все ясно: [раз](https://www.statisticssolutions.com/misconceptions-about-confidence-intervals/), [два](https://stats.stackexchange.com/questions/26450/why-does-a-95-confidence-interval-ci-not-imply-a-95-chance-of-containing-the), [три](http://thinkcognitive.org/ru/blog/golova-professora-bambldorfa#.W-ax_zln00M), [четыре](https://andrewgelman.com/2016/11/23/abraham-lincoln-confidence-intervals/), [пять](https://andrewgelman.com/2016/11/26/reminder-instead-confidence-interval-lets-say-uncertainty-interval/).
+
+<center> Так что дальше я излагаю **свое мнение**... </br> ... и мне больше не интересно про это спорить  </br> </br> </center>
+
+Доверительный интервал для среднего:
+
+$$\bar{x} \pm \text{z-score} \times \frac{\sigma}{\sqrt{n}}$$
+
+*z-score* --- это число в станадртных отклонениях нормального распределения, которые содержат центральные 95%, 99% и т. п. данных. Для 95% доверительного интервала это 1.96, для 99% доверительного интервала это 2.58.
+
+```{r}
+(qnorm(0.975)-qnorm(0.025))/2
+(qnorm(0.995)-qnorm(0.005))/2
+```
+
+На примере встроенный датасет `ChickWeight`, который содержит вес цыплят (`weight`) в зависимости от типа диеты (`Diet`). Мы будем анализировать 20 дневных птенцов.
+
+```{r}
+ChickWeight %>% 
+  filter(Time == 20) %>%   
+  summarise(mean = mean(weight),
+            ci = 1.96 * sd(weight)/sqrt(n()),
+            min = mean - ci,
+            max = mean + ci)
+```
+
+[Визуализация доверительного интервала](https://rpsychologist.com/d3/CI/)
+
+### 1.1
+
+Чтобы не скучать, посчитайте 95% доверительный интервал для среднего значения уровня кислотности (`ph`) в [датасете](https://raw.githubusercontent.com/agricolamz/2019_BayesDan_winter/master/datasets/urine.csv) про мочу. Укажите нижнюю границу доверительного интервала (mean - ci) (два знака после запятой).
+
+```{r}
+urine <- read_csv("https://raw.githubusercontent.com/agricolamz/2019_BayesDan_winter/master/datasets/urine.csv") 
+
+urine %>% 
+  summarise(mean = mean(ph),
+            ci = 1.96 * sd(ph)/sqrt(n()),
+            min = mean - ci,
+            max = mean + ci)
+```
+
+<form name="FormOne" onsubmit="return validateFormOne()" method="post">
+<input type="text" name="answerOne">
+<input type="submit" value="check">
+</form>
+
+### 1.2 Бутстрэп
+
+Если нужны какие-то более изощренные статистики, то можно использовать бустрэп.
+```{r, eval=FALSE}
+library(bootstrap)
+
+set.seed(42)
+boot_mean <- bootstrap(urine$ph, nboot = 1000, theta = mean)
+```
+
+### 1.3 Доверительный интервал и биномиальные данные
+
+Распространение логики доверительного интервала на биномиальные данные называется интервал Вальда:
+
+$$\bar{x} = \theta; \sigma = \sqrt{\frac{\theta\times(1-\theta)}{n}}$$
+
+Тогда интервал Вальда:
+
+$$\theta \pm  z\times\sqrt{\frac{\theta\times(1-\theta)} {n}}$$
+
+Есть только одна проблема: работает он плохо. Его аналоги перечислены в других работ:
+
+* assymptotic method with continuity correction
+* Wilson score
+* Wilson Score method with continuity correction
+* Jeffreys interval
+* Clopper–Pearson interval (default in R `binom.test()`)
+* Agresti–Coull interval
+* ... см. пакет `binom`
+
+```{r, fig.height= 7}
+chekhov <- read_tsv("https://goo.gl/o18uj7")
+
+chekhov %>% 
+  filter(word == "не") %>%
+  slice(1:30) %>% 
+  group_by(titles) %>% 
+  mutate(low_ci = binom.test(x = n, n = n_words, ci.method = "Clopper-Pearson")$conf.int[1],
+         up_ci = binom.test(x = n, n = n_words, ci.method = "Clopper-Pearson")$conf.int[2]) %>%
+  ggplot(aes(trunc_titles, average))+
+  geom_point()+
+  geom_pointrange(aes(ymin = low_ci, ymax = up_ci))+
+  theme_bw()+
+  coord_flip()+
+  labs(title = 'Среднее и 95% CI употребления "не" в рассказах А. Чехова',
+       x = "", y = "")
+```
+
+В базовом пакете функция `binom.test()` не позволяет выбирать тип доверительного интервала. `ci.method = "Clopper-Pearson"` возможна, если включить библиотеку `mosaic`. 
+
+##  2. Байесовский доверительный интервал
+
+<script>
+function validateFormOne() {
+    var x = document.forms["FormOne"]["answerOne"].value;
+    if (x != "5.87") {
+        alert("У меня другой ответ...");
+        return false;
+    } else {
+        alert("Да, все правильно");
+        return false;
+    }
+}
+</script>

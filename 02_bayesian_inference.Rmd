@@ -312,7 +312,7 @@ shiny::runGitHub("agricolamz/bayes_for_normal_app")
 
 ### 4.3
 
-В [датасет](https://raw.githubusercontent.com/agricolamz/2019_BayesDan_winter/master/datasets/phoible_n_consonants.csv) записаны данные по исследованию мочи [Andrews, Herzberg 1985]. В переменной `pH` записано значение уровня кислотности. Сделайте байесовский апдейт наблюдаемых данных, используя априорное распределение $\mathcal{N}(\mu = 9, \sigma^2 = 2)$.
+В [датасет](https://raw.githubusercontent.com/agricolamz/2019_BayesDan_winter/master/datasets/urine.csv) записаны данные по исследованию мочи [Andrews, Herzberg 1985]. В переменной `pH` записано значение уровня кислотности. Сделайте байесовский апдейт наблюдаемых данных, используя априорное распределение $\mathcal{N}(\mu = 9, \sigma^2 = 2)$.
 
 Укажите апостериорное стандартное отклонение:
 
