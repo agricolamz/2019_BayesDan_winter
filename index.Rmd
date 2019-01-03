@@ -11,6 +11,8 @@ editor_options:
 ```{r}
 library(tidyverse)
 library(shiny)
+library(binom)
+library(mosaic)
 ```
 
 ## Расписание

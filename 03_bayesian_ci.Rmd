@@ -8,6 +8,11 @@ editor_options:
 ```{r child = 'preamble.Rmd'}
 ```
 
+```{r}
+library(mosaic)
+```
+
+
 ## 1. Фриквентистские доверительные интервалы
 
 Интерпретация доверительных интервалов не легкое дело. Если вы знакомы с этим понятием и считаете, что все ясно: [раз](https://www.statisticssolutions.com/misconceptions-about-confidence-intervals/), [два](https://stats.stackexchange.com/questions/26450/why-does-a-95-confidence-interval-ci-not-imply-a-95-chance-of-containing-the), [три](http://thinkcognitive.org/ru/blog/golova-professora-bambldorfa#.W-ax_zln00M), [четыре](https://andrewgelman.com/2016/11/23/abraham-lincoln-confidence-intervals/), [пять](https://andrewgelman.com/2016/11/26/reminder-instead-confidence-interval-lets-say-uncertainty-interval/).
@@ -42,7 +47,7 @@ ChickWeight %>%
 
 Чтобы не скучать, посчитайте 95% доверительный интервал для среднего значения уровня кислотности (`ph`) в [датасете](https://raw.githubusercontent.com/agricolamz/2019_BayesDan_winter/master/datasets/urine.csv) про мочу. Укажите нижнюю границу доверительного интервала (mean - ci) (два знака после запятой).
 
-```{r}
+```{r, include = FALSE}
 urine <- read_csv("https://raw.githubusercontent.com/agricolamz/2019_BayesDan_winter/master/datasets/urine.csv") 
 
 urine %>% 
@@ -55,7 +60,8 @@ urine %>%
 <form name="FormOne" onsubmit="return validateFormOne()" method="post">
 <input type="text" name="answerOne">
 <input type="submit" value="check">
-</form>
+</form><br>
+
 
 ### 1.2 Бутстрэп
 
@@ -68,6 +74,21 @@ boot_mean <- bootstrap(urine$ph, nboot = 1000, theta = mean)
 ```
 
 ### 1.3 Доверительный интервал и биномиальные данные
+
+Сначала данные: 
+
+* количество "не" в 311 рассказов А. Чехова
+* число слов в каждом рассказе
+* 46610 уникальных слов в каждом рассказе
+
+```{r}
+chekhov <- read_csv("https://raw.githubusercontent.com/agricolamz/2019_BayesDan_winter/master/datasets/chekhov.csv")
+
+chekhov %>% 
+  mutate(trunc_titles = str_trunc(titles, 25, side = "right"),
+         average = n/n_words) ->
+  chekhov
+```
 
 Распространение логики доверительного интервала на биномиальные данные называется интервал Вальда:
 
@@ -88,10 +109,7 @@ $$\theta \pm  z\times\sqrt{\frac{\theta\times(1-\theta)} {n}}$$
 * ... см. пакет `binom`
 
 ```{r, fig.height= 7}
-chekhov <- read_tsv("https://goo.gl/o18uj7")
-
 chekhov %>% 
-  filter(word == "не") %>%
   slice(1:30) %>% 
   group_by(titles) %>% 
   mutate(low_ci = binom.test(x = n, n = n_words, ci.method = "Clopper-Pearson")$conf.int[1],
@@ -99,20 +117,126 @@ chekhov %>%
   ggplot(aes(trunc_titles, average))+
   geom_point()+
   geom_pointrange(aes(ymin = low_ci, ymax = up_ci))+
-  theme_bw()+
   coord_flip()+
   labs(title = 'Среднее и 95% CI употребления "не" в рассказах А. Чехова',
        x = "", y = "")
 ```
 
-В базовом пакете функция `binom.test()` не позволяет выбирать тип доверительного интервала. `ci.method = "Clopper-Pearson"` возможна, если включить библиотеку `mosaic`. 
+В базовом пакете функция `binom.test()` не позволяет выбирать тип доверительного интервала. `ci.method = "Clopper-Pearson"` возможна, если включить библиотеку `mosaic`.
+
+
+### 1.4
+
+В базе данных [Phoible](http://phoible.org/), в которой собраны фонологические инвентари в языках мира. В [датасет](https://raw.githubusercontent.com/agricolamz/2019_BayesDan_winter/master/datasets/phoible_n_consonants.csv) записано три переменных:
+
+* language --- язык;
+* consonants --- количество согласных;
+* phonemes --- количество фонем.
+
+Посчитайте долю, которую составляет согласные от всего фонологического набора каждого языка и доверительный интервал для него (`ci.method = "Clopper-Pearson"`). Полученные интервалы округлите до 3 знаков после запятой, а в ответ укажите название языка с интервалом равный 0.514.
+
+```{r, include=FALSE}
+df <- read_csv("https://raw.githubusercontent.com/agricolamz/2019_BayesDan_winter/master/datasets/phoible_n_consonants.csv")
+df %>% 
+  group_by(language) %>% 
+  mutate(ratio = consonants/phonemes,
+         low_ci = binom.test(x = consonants, n = phonemes, ci.method = "Clopper-Pearson")$conf.int[1],
+         up_ci = binom.test(x = consonants, n = phonemes, ci.method = "Clopper-Pearson")$conf.int[2],
+         ci = round(up_ci - low_ci, 3)) %>% 
+  filter(ci == 0.514)
+```
+
+<form name="FormTwo" onsubmit="return validateFormTwo()" method="post">
+<input type="text" name="answerTwo">
+<input type="submit" value="check">
+</form><br>
+
 
 ##  2. Байесовский доверительный интервал
+
+Байесовский доверительный $k$-% интервал (по-английски credible interval) --- это интервал $[\frac{k}{2}, 1-\frac{k}{2}]$ от апостериорного распределения. Давайте проапдейтим данные рассказов Чехова при помощи априорного распределения с параметрами ($\alpha = 5.283022$, $\beta = 231.6328$).
+
+```{r, fig.height=7}
+chekhov %>% 
+  filter(word == "не") %>%
+  group_by(titles) %>% 
+  mutate(beta_prior = n_words-n,
+         alpha_post = n + 5.283022,
+         beta_post = beta_prior + 231.6328,
+         average_post = alpha_post/(alpha_post+beta_post),
+         cred_int_l = qbeta(.025, alpha_post, beta_post),
+         cred_int_h = qbeta(.975, alpha_post, beta_post))
+  
+  
+  
+  slice(1:30) %>% 
+  mutate(alpha_post = n+alpha0,
+         beta_post = n_words-n+beta0,
+         average_post = alpha_post/(alpha_post+beta_post),
+         cred_int_l = qbeta(.025, alpha_post, beta_post),
+         cred_int_h = qbeta(.975, alpha_post, beta_post)) ->
+  posterior
+
+posterior %>% 
+  select(titles, n_words, average, average_post) %>% 
+  arrange(n_words)
+
+posterior %>% 
+  ggplot(aes(trunc_titles, average_post, ymin = cred_int_l, ymax = cred_int_h))+
+  geom_pointrange()+
+  coord_flip()+
+  theme_bw()
+```
+
+```{r, echo= FALSE, fig.height=7, eval=FALSE}
+chekhov %>% 
+  filter(word == "не") %>%
+  slice(1:30) %>% 
+  group_by(titles) %>% 
+  mutate(low_ci = binom.test(x = n, n = n_words)$conf.int[1],
+         up_ci = binom.test(x = n, n = n_words)$conf.int[2],
+         interval = "confidence") %>% 
+  ungroup() %>% 
+  select(trunc_titles, low_ci, up_ci, interval, average)->
+  df_1
+
+chekhov %>% 
+  filter(word == "не") %>%
+  slice(1:30) %>% 
+  group_by(titles) %>% 
+  mutate(alpha_post = n+alpha0,
+         beta_post = n_words-n+beta0,
+         average = alpha_post/(alpha_post+beta_post),
+         low_ci = qbeta(.025, alpha_post, beta_post),
+         up_ci = qbeta(.975, alpha_post, beta_post),
+         interval = "credible") %>% 
+  ungroup() %>% 
+  select(trunc_titles, low_ci, up_ci, interval, average)->
+  df_2
+
+rbind(df_1, df_2) %>% 
+  ggplot(aes(trunc_titles, y = average, ymin = low_ci, ymax = up_ci, color = interval)) +
+  geom_errorbar()+
+  geom_point()+
+  coord_flip()+
+  theme_bw()+
+  xlab("")
+```
 
 <script>
 function validateFormOne() {
     var x = document.forms["FormOne"]["answerOne"].value;
-    if (x != "5.87") {
+    if (x != "5.868759") {
+        alert("У меня другой ответ...");
+        return false;
+    } else {
+        alert("Да, все правильно");
+        return false;
+    }
+}
+function validateFormTwo() {
+    var x = document.forms["FormTwo"]["answerTwo"].value;
+    if (x != "Namia") {
         alert("У меня другой ответ...");
         return false;
     } else {

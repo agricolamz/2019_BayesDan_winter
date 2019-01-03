@@ -68,7 +68,7 @@ qnorm(0.25, mean = 20, sd = 90)
 <form name="FormOne" onsubmit="return validateFormOne()" method="post">
 <input type="text" name="answerOne">
 <input type="submit" value="check">
-</form>
+</form><br>
 
 #### 1.2
 
@@ -81,7 +81,7 @@ qnorm(.97, 0, 1)
 <form name="FormTwo" onsubmit="return validateFormTwo()" method="post">
 <input type="text" name="answerTwo">
 <input type="submit" value="check">
-</form>
+</form><br>
 
 ## 2. Дискретные распределения
 ### 2.1  Биномиальное распределение

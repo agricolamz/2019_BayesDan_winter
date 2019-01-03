@@ -87,9 +87,7 @@ data_frame(model = c("Auckland", "Beijing", "Chicago", "Mumbai", "San Diego"),
 <form name="FormOne" onsubmit="return validateFormOne()" method="post">
 <input type="text" name="answerOne">
 <input type="submit" value="check">
-</form>
-
-
+</form><br>
 
 ## 3. Биномиальные данные
 
@@ -194,7 +192,7 @@ df %>%
 <form name="FormTwo" onsubmit="return validateFormTwo()" method="post">
 <input type="text" name="answerTwo">
 <input type="submit" value="check">
-</form>
+</form><br>
 
 Проведите байесовский апдейт наблюдений каждого языка, используя в качестве априорного распределения бета распределение с параметрами α = 9.300246, и β = 4.4545. Посчитайте модуль разницы между апостериорной долей и изначальной долей представленной в данных. В ответе укажите язык с наибольшей разницей.
 
@@ -214,7 +212,7 @@ df %>%
 <form name="FormThree" onsubmit="return validateFormThree()" method="post">
 <input type="text" name="answerThree">
 <input type="submit" value="check">
-</form>
+</form><br>
 
 ## 4. Нормальное распределение
 
@@ -319,14 +317,14 @@ shiny::runGitHub("agricolamz/bayes_for_normal_app")
 <form name="FormFour" onsubmit="return validateFormFour()" method="post">
 <input type="text" name="answerFour">
 <input type="submit" value="check">
-</form>
+</form><br>
 
 Укажите апостериорное среднее:
 
 <form name="FormFive" onsubmit="return validateFormFive()" method="post">
 <input type="text" name="answerFive">
 <input type="submit" value="check">
-</form>
+</form><br>
 
 Попробуйте визуализировать:
 
