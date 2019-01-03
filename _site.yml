@@ -3,7 +3,7 @@ navbar:
   left:
   - icon: fa-home
     href: index.html
-  - text: биномиальные данные
+  - text: день первый
     menu:
     - text: 1. Распределения
       href: 01_distributions.html
@@ -11,18 +11,18 @@ navbar:
       href: 02_bayesian_inference.html
     - text: 3. Байесовский доверительный интервал
       href: 03_bayesian_ci.html
+  - text: день второй
+    menu:
     - text: 4. Empirical Bayes Estimation
       href: 04_empirical_bayes.html
-  - text: другие типы данных
-    menu:
-    - text: 5. Нормальные данные
-      href: 05_normal.html
-    - text: 6. Байесовские гипотезы
-      href: 06_hypotheses.html
-    - text: 7. Введение в MCMC
-      href: 07_mcmc.html
-    - text: 8. Байесовская регрессия
-      href: 08_bayesian_regression.html      
+    - text: 5. Байесовские фактор
+      href: 05_bayesian_factor.html
+    - text: 6. Введение в MCMC
+      href: 06_mcmc.html
+  - text: день третий
+    menu:      
+    - text: 7. Байесовская регрессия
+      href: 07_bayesian_regression.html      
 output_dir: docs
 output:
   html_document:
