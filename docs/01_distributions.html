@@ -24,6 +24,7 @@
 <link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
 <script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
 <link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
 <script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
 <link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
@@ -94,6 +95,15 @@ code span.va { color: #19177c; } /* Variable */
 code span.vs { color: #4070a0; } /* VerbatimString */
 code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 
+.sourceCode .row {
+  width: 100%;
+}
+.sourceCode {
+  overflow-x: auto;
+}
+.code-folding-btn {
+  margin-right: -30px;
+}
 </style>
 <script>
 // apply pandoc div.sourceCode style to pre.sourceCode instead
@@ -343,6 +353,14 @@ $(document).ready(function () {
 </script>
 
 <!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("show" === "show");
+});
+</script>
 
 
 
@@ -525,6 +543,14 @@ div.tocify {
 
 <div class="fluid-row" id="header">
 
+<div class="btn-group pull-right">
+<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
 
 
 <h1 class="title toc-ignore">1. Распределения</h1>
@@ -688,7 +714,7 @@ div.tocify {
 <p><span class="math display">\[P(x) = \frac{1}{\sqrt{x\sigma2\pi}}\times e^{-\frac{\left(\ln(x)-\mu\right)^2}{2\sigma^2}}\]</span></p>
 <p><span class="math display">\[\mu \in \mathbb{R}; \sigma^2 &gt; 0\]</span></p>
 <div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" data-line-number="1"><span class="kw">data_frame</span>(<span class="dt">x =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">100</span>,</a>
-<a class="sourceLine" id="cb18-2" data-line-number="2">           <span class="dt">PDF =</span> <span class="kw">dlnorm</span>(<span class="dt">x =</span> x, <span class="dt">mean =</span> <span class="dv">3</span>, <span class="dt">sd =</span> <span class="fl">0.5</span>)) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb18-2" data-line-number="2">           <span class="dt">PDF =</span> <span class="kw">dlnorm</span>(<span class="dt">x =</span> x, <span class="dt">meanlog =</span> <span class="dv">3</span>, <span class="dt">sdlog =</span> <span class="fl">0.5</span>)) <span class="op">%&gt;%</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb18-3" data-line-number="3"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(x, PDF))<span class="op">+</span></a>
 <a class="sourceLine" id="cb18-4" data-line-number="4"><span class="st">  </span><span class="kw">geom_point</span>()<span class="op">+</span></a>
 <a class="sourceLine" id="cb18-5" data-line-number="5"><span class="st">  </span><span class="kw">geom_line</span>()<span class="op">+</span></a>
@@ -703,18 +729,28 @@ div.tocify {
 <a class="sourceLine" id="cb19-3" data-line-number="3"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(x, PDF))<span class="op">+</span></a>
 <a class="sourceLine" id="cb19-4" data-line-number="4"><span class="st">  </span><span class="kw">geom_point</span>()<span class="op">+</span></a>
 <a class="sourceLine" id="cb19-5" data-line-number="5"><span class="st">  </span><span class="kw">geom_line</span>()<span class="op">+</span></a>
-<a class="sourceLine" id="cb19-6" data-line-number="6"><span class="st">  </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">&quot;PDF экспоненциального распредления&quot;</span>)</a></code></pre></div>
+<a class="sourceLine" id="cb19-6" data-line-number="6"><span class="st">  </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">&quot;PDF экспоненциального распредления с коэффициентом интенсивности 0.5&quot;</span>)</a></code></pre></div>
 <p><img src="01_distributions_files/figure-html/unnamed-chunk-18-1.png" width="864" /></p>
 </div>
 <div id="-" class="section level3">
-<h3>3.4 Унимодальное распределение</h3>
-<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" data-line-number="1"><span class="kw">data_frame</span>(<span class="dt">x =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">20</span>,</a>
-<a class="sourceLine" id="cb20-2" data-line-number="2">           <span class="dt">PDF =</span> <span class="kw">dunif</span>(<span class="dt">x =</span> x, <span class="dt">min =</span> <span class="dv">5</span>, <span class="dt">max =</span> <span class="dv">10</span>)) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<h3>3.4 Распределение Коши</h3>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" data-line-number="1"><span class="kw">data_frame</span>(<span class="dt">x =</span> <span class="kw">seq</span>(<span class="op">-</span><span class="dv">8</span>, <span class="dv">8</span>, <span class="fl">0.1</span>),</a>
+<a class="sourceLine" id="cb20-2" data-line-number="2">           <span class="dt">PDF =</span> <span class="kw">dcauchy</span>(<span class="dt">x =</span> x, <span class="dt">location =</span> <span class="dv">1</span>, <span class="dt">scale =</span> <span class="dv">1</span>)) <span class="op">%&gt;%</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb20-3" data-line-number="3"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(x, PDF))<span class="op">+</span></a>
 <a class="sourceLine" id="cb20-4" data-line-number="4"><span class="st">  </span><span class="kw">geom_point</span>()<span class="op">+</span></a>
 <a class="sourceLine" id="cb20-5" data-line-number="5"><span class="st">  </span><span class="kw">geom_line</span>()<span class="op">+</span></a>
-<a class="sourceLine" id="cb20-6" data-line-number="6"><span class="st">  </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">&quot;PDF унимодального распредления (min = 5, max = 10)&quot;</span>)</a></code></pre></div>
+<a class="sourceLine" id="cb20-6" data-line-number="6"><span class="st">  </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">&quot;PDF распредления Коши с коэффициентами сдвига и масштаба равные 1&quot;</span>)</a></code></pre></div>
 <p><img src="01_distributions_files/figure-html/unnamed-chunk-19-1.png" width="864" /></p>
+</div>
+<div id="-" class="section level3">
+<h3>3.5 Унимодальное распределение</h3>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" data-line-number="1"><span class="kw">data_frame</span>(<span class="dt">x =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">20</span>,</a>
+<a class="sourceLine" id="cb21-2" data-line-number="2">           <span class="dt">PDF =</span> <span class="kw">dunif</span>(<span class="dt">x =</span> x, <span class="dt">min =</span> <span class="dv">5</span>, <span class="dt">max =</span> <span class="dv">10</span>)) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb21-3" data-line-number="3"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(x, PDF))<span class="op">+</span></a>
+<a class="sourceLine" id="cb21-4" data-line-number="4"><span class="st">  </span><span class="kw">geom_point</span>()<span class="op">+</span></a>
+<a class="sourceLine" id="cb21-5" data-line-number="5"><span class="st">  </span><span class="kw">geom_line</span>()<span class="op">+</span></a>
+<a class="sourceLine" id="cb21-6" data-line-number="6"><span class="st">  </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">&quot;PDF унимодального распредления (min = 5, max = 10)&quot;</span>)</a></code></pre></div>
+<p><img src="01_distributions_files/figure-html/unnamed-chunk-20-1.png" width="864" /></p>
 </div>
 </div>
 <div id="conjugate-priors" class="section level2">
@@ -728,22 +764,22 @@ div.tocify {
 <li><span class="math inline">\(P(θ|Data)\)</span> — апостериорная вероятность (posterior)</li>
 </ul>
 <p>Мы вернемся к формуле Байеса и байесовскому подходу в следующих лекциях, а сейчас важно обсудить распределения априорной и апостериорной вероятностей. Оба эти распределения — распределения вероятностей.</p>
-<p><img src="01_distributions_files/figure-html/unnamed-chunk-20-1.png" width="864" /></p>
+<p><img src="01_distributions_files/figure-html/unnamed-chunk-21-1.png" width="864" /></p>
 <p>Если у нас есть некоторые данные с функцией правдоподобия P(Data|θ), а априорное и апостериорное распределения θ относятся к одному семейству распределений, то данное семейство распредлений называется <strong>сопряжённым априорным распределением</strong> к функции правдоподобия P(Data|θ) (<strong>conjugate prior</strong>).</p>
 <div id="-" class="section level3">
 <h3>4.1 Бета распределение</h3>
 <p><span class="math display">\[P(x; α, β) = \frac{x^{α-1}\times (1-x)^{β-1}}{B(α, β)}; 0 \leq x \leq 1; α, β &gt; 0\]</span></p>
 <p>Бета функция:</p>
 <p><span class="math display">\[Β(α, β) = \frac{Γ(α)\times Γ(β)}{Γ(α+β)} = \frac{(α-1)!(β-1)!}{(α+β-1)!} \]</span></p>
-<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" data-line-number="1"><span class="kw">data_frame</span>(<span class="dt">x =</span> <span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dt">length.out =</span> <span class="dv">51</span>),</a>
-<a class="sourceLine" id="cb21-2" data-line-number="2">           <span class="dt">density =</span> <span class="kw">dbeta</span>(<span class="dt">x =</span> x, <span class="dt">shape1 =</span> <span class="dv">8</span>, <span class="dt">shape2 =</span> <span class="dv">42</span>)) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb21-3" data-line-number="3"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(x, density))<span class="op">+</span></a>
-<a class="sourceLine" id="cb21-4" data-line-number="4"><span class="st">  </span><span class="kw">geom_point</span>()<span class="op">+</span></a>
-<a class="sourceLine" id="cb21-5" data-line-number="5"><span class="st">  </span><span class="kw">geom_line</span>()<span class="op">+</span></a>
-<a class="sourceLine" id="cb21-6" data-line-number="6"><span class="st">  </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">&quot;Бета распределение α = 8, β = 42&quot;</span>)</a></code></pre></div>
-<p><img src="01_distributions_files/figure-html/unnamed-chunk-21-1.png" width="864" /></p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" data-line-number="1"><span class="kw">data_frame</span>(<span class="dt">x =</span> <span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dt">length.out =</span> <span class="dv">51</span>),</a>
+<a class="sourceLine" id="cb22-2" data-line-number="2">           <span class="dt">density =</span> <span class="kw">dbeta</span>(<span class="dt">x =</span> x, <span class="dt">shape1 =</span> <span class="dv">8</span>, <span class="dt">shape2 =</span> <span class="dv">42</span>)) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb22-3" data-line-number="3"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(x, density))<span class="op">+</span></a>
+<a class="sourceLine" id="cb22-4" data-line-number="4"><span class="st">  </span><span class="kw">geom_point</span>()<span class="op">+</span></a>
+<a class="sourceLine" id="cb22-5" data-line-number="5"><span class="st">  </span><span class="kw">geom_line</span>()<span class="op">+</span></a>
+<a class="sourceLine" id="cb22-6" data-line-number="6"><span class="st">  </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">&quot;Бета распределение α = 8, β = 42&quot;</span>)</a></code></pre></div>
+<p><img src="01_distributions_files/figure-html/unnamed-chunk-22-1.png" width="864" /></p>
 <p>Можно поиграть с разными параметрами:</p>
-<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" data-line-number="1">shiny<span class="op">::</span><span class="kw">runGitHub</span>(<span class="st">&quot;agricolamz/beta_distribution_shiny&quot;</span>) </a></code></pre></div>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb23-1" data-line-number="1">shiny<span class="op">::</span><span class="kw">runGitHub</span>(<span class="st">&quot;agricolamz/beta_distribution_shiny&quot;</span>) </a></code></pre></div>
 <p><span class="math display">\[\mu = \frac{\alpha}{\alpha+\beta}\]</span></p>
 <p><span class="math display">\[\sigma = \frac{\alpha\times\beta}{(\alpha+\beta)^2\times(\alpha+\beta+1)}\]</span></p>
 </div>
@@ -758,40 +794,47 @@ div.tocify {
 <div id="-vs.-" class="section level2">
 <h2>5. Вероятность vs. функция правдободобия</h2>
 <p>Предположим что распределение количества согласных в языках мира можно описать нормальным распределением со средним 22, и стандартным отклонением 6:</p>
-<p><img src="01_distributions_files/figure-html/unnamed-chunk-23-1.png" width="864" /></p>
-<p>Тогда вероятность того, что в выбранных произвольно языках окажется от 23 до 32 согласных равна интегралу нормального распределения в указанном промежутке:</p>
 <p><img src="01_distributions_files/figure-html/unnamed-chunk-24-1.png" width="864" /></p>
+<p>Тогда вероятность того, что в выбранных произвольно языках окажется от 23 до 32 согласных равна интегралу нормального распределения в указанном промежутке:</p>
+<p><img src="01_distributions_files/figure-html/unnamed-chunk-25-1.png" width="864" /></p>
 <p><span class="math display">\[P\left(X \in (23,\, 32) | X \sim \mathcal{N}(\mu = 22,\, \sigma^{2}=6)\right) = ...\]</span></p>
-<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb23-1" data-line-number="1"><span class="kw">pnorm</span>(<span class="dv">32</span>, <span class="dt">mean =</span> <span class="dv">22</span>, <span class="dt">sd =</span> <span class="dv">6</span>) <span class="op">-</span><span class="st"> </span><span class="kw">pnorm</span>(<span class="dv">23</span>, <span class="dt">mean =</span> <span class="dv">22</span>, <span class="dt">sd =</span> <span class="dv">6</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb24-1" data-line-number="1"><span class="kw">pnorm</span>(<span class="dv">32</span>, <span class="dt">mean =</span> <span class="dv">22</span>, <span class="dt">sd =</span> <span class="dv">6</span>) <span class="op">-</span><span class="st"> </span><span class="kw">pnorm</span>(<span class="dv">23</span>, <span class="dt">mean =</span> <span class="dv">22</span>, <span class="dt">sd =</span> <span class="dv">6</span>)</a></code></pre></div>
 <pre><code>[1] 0.3860258</code></pre>
 <p>Когда мы говорим про функцию правдоподобия, то мы уже нашли еще один язык в котором оказалось 33 согласных. Нас интересует, насколько правдоподобна функция нормального распределения со средним 22 и стандартным отклонением 6 при значении переменной 33. Это значение равно функции плотности:</p>
-<p><img src="01_distributions_files/figure-html/unnamed-chunk-26-1.png" width="864" /></p>
+<p><img src="01_distributions_files/figure-html/unnamed-chunk-27-1.png" width="864" /></p>
 <p><span class="math display">\[L\left(X \sim \mathcal{N}(\mu = 22,\, \sigma^{2}=6)|x = 33\right) = ...\]</span></p>
-<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb25-1" data-line-number="1"><span class="kw">dnorm</span>(<span class="dv">33</span>, <span class="dv">22</span>, <span class="dv">6</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb26-1" data-line-number="1"><span class="kw">dnorm</span>(<span class="dv">33</span>, <span class="dv">22</span>, <span class="dv">6</span>)</a></code></pre></div>
 <pre><code>[1] 0.01238519</code></pre>
 <p>В результате мы можем пострить график, который будет правдоподобие моделей с разными средними и фиксированным стандартным отклонением.</p>
-<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb27-1" data-line-number="1"><span class="kw">data_frame</span>(<span class="dt">x =</span> <span class="dv">0</span><span class="op">:</span><span class="dv">80</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb27-2" data-line-number="2"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(x)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb27-3" data-line-number="3"><span class="st">  </span><span class="kw">stat_function</span>(<span class="dt">fun =</span> <span class="cf">function</span>(x) <span class="kw">dnorm</span>(<span class="dv">33</span>, x, <span class="dv">6</span>))<span class="op">+</span></a>
-<a class="sourceLine" id="cb27-4" data-line-number="4"><span class="st">  </span><span class="kw">scale_x_continuous</span>(<span class="dt">breaks =</span> <span class="kw">c</span>(<span class="dv">0</span><span class="op">:</span><span class="dv">4</span><span class="op">*</span><span class="dv">20</span>, <span class="dv">33</span>))<span class="op">+</span></a>
-<a class="sourceLine" id="cb27-5" data-line-number="5"><span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="kw">TeX</span>(<span class="st">&quot;$</span><span class="ch">\\</span><span class="st">mu$&quot;</span>),</a>
-<a class="sourceLine" id="cb27-6" data-line-number="6">       <span class="dt">y =</span> <span class="kw">TeX</span>(<span class="st">&quot;$L(N(</span><span class="ch">\\</span><span class="st">mu,</span><span class="ch">\\</span><span class="st">, </span><span class="ch">\\</span><span class="st">sigma^{2}=6)|x = 33))$&quot;</span>),</a>
-<a class="sourceLine" id="cb27-7" data-line-number="7">       <span class="dt">title =</span> <span class="st">&quot;Насколько правдоподобны модели с разными μ, если мы наблюдаем значение 33?&quot;</span>)</a></code></pre></div>
-<p><img src="01_distributions_files/figure-html/unnamed-chunk-28-1.png" width="864" /></p>
-<p>А что если у нас не одно наблюдение, а несколько? Например, мы наблюдаем языки с 33 и 26 согласными? События независимы друг от друга, значит, мы можем перемножить получаемые вероятности.</p>
 <div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb28-1" data-line-number="1"><span class="kw">data_frame</span>(<span class="dt">x =</span> <span class="dv">0</span><span class="op">:</span><span class="dv">80</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb28-2" data-line-number="2"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(x)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb28-3" data-line-number="3"><span class="st">  </span><span class="kw">stat_function</span>(<span class="dt">fun =</span> <span class="cf">function</span>(x) <span class="kw">dnorm</span>(<span class="dv">33</span>, x, <span class="dv">6</span>)<span class="op">*</span><span class="kw">dnorm</span>(<span class="dv">26</span>, x, <span class="dv">6</span>))<span class="op">+</span></a>
-<a class="sourceLine" id="cb28-4" data-line-number="4"><span class="st">  </span><span class="kw">scale_x_continuous</span>(<span class="dt">breaks =</span> <span class="kw">c</span>(<span class="dv">0</span><span class="op">:</span><span class="dv">4</span><span class="op">*</span><span class="dv">20</span>, <span class="dv">33</span>, <span class="dv">26</span>))<span class="op">+</span></a>
+<a class="sourceLine" id="cb28-3" data-line-number="3"><span class="st">  </span><span class="kw">stat_function</span>(<span class="dt">fun =</span> <span class="cf">function</span>(x) <span class="kw">dnorm</span>(<span class="dv">33</span>, x, <span class="dv">6</span>))<span class="op">+</span></a>
+<a class="sourceLine" id="cb28-4" data-line-number="4"><span class="st">  </span><span class="kw">scale_x_continuous</span>(<span class="dt">breaks =</span> <span class="kw">c</span>(<span class="dv">0</span><span class="op">:</span><span class="dv">4</span><span class="op">*</span><span class="dv">20</span>, <span class="dv">33</span>))<span class="op">+</span></a>
 <a class="sourceLine" id="cb28-5" data-line-number="5"><span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="kw">TeX</span>(<span class="st">&quot;$</span><span class="ch">\\</span><span class="st">mu$&quot;</span>),</a>
 <a class="sourceLine" id="cb28-6" data-line-number="6">       <span class="dt">y =</span> <span class="kw">TeX</span>(<span class="st">&quot;$L(N(</span><span class="ch">\\</span><span class="st">mu,</span><span class="ch">\\</span><span class="st">, </span><span class="ch">\\</span><span class="st">sigma^{2}=6)|x = 33))$&quot;</span>),</a>
-<a class="sourceLine" id="cb28-7" data-line-number="7">       <span class="dt">title =</span> <span class="st">&quot;Насколько правдоподобны модели с разными μ, если мы наблюдаем значения 26 и 33?&quot;</span>)</a></code></pre></div>
+<a class="sourceLine" id="cb28-7" data-line-number="7">       <span class="dt">title =</span> <span class="st">&quot;Насколько правдоподобны модели с разными μ, если мы наблюдаем значение 33?&quot;</span>)</a></code></pre></div>
 <p><img src="01_distributions_files/figure-html/unnamed-chunk-29-1.png" width="864" /></p>
+<p>А что если у нас не одно наблюдение, а несколько? Например, мы наблюдаем языки с 33 и 26 согласными? События независимы друг от друга, значит, мы можем перемножить получаемые вероятности.</p>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb29-1" data-line-number="1"><span class="kw">data_frame</span>(<span class="dt">x =</span> <span class="dv">0</span><span class="op">:</span><span class="dv">80</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb29-2" data-line-number="2"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(x)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb29-3" data-line-number="3"><span class="st">  </span><span class="kw">stat_function</span>(<span class="dt">fun =</span> <span class="cf">function</span>(x) <span class="kw">dnorm</span>(<span class="dv">33</span>, x, <span class="dv">6</span>)<span class="op">*</span><span class="kw">dnorm</span>(<span class="dv">26</span>, x, <span class="dv">6</span>))<span class="op">+</span></a>
+<a class="sourceLine" id="cb29-4" data-line-number="4"><span class="st">  </span><span class="kw">scale_x_continuous</span>(<span class="dt">breaks =</span> <span class="kw">c</span>(<span class="dv">0</span><span class="op">:</span><span class="dv">4</span><span class="op">*</span><span class="dv">20</span>, <span class="dv">33</span>, <span class="dv">26</span>))<span class="op">+</span></a>
+<a class="sourceLine" id="cb29-5" data-line-number="5"><span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="kw">TeX</span>(<span class="st">&quot;$</span><span class="ch">\\</span><span class="st">mu$&quot;</span>),</a>
+<a class="sourceLine" id="cb29-6" data-line-number="6">       <span class="dt">y =</span> <span class="kw">TeX</span>(<span class="st">&quot;$L(N(</span><span class="ch">\\</span><span class="st">mu,</span><span class="ch">\\</span><span class="st">, </span><span class="ch">\\</span><span class="st">sigma^{2}=6)|x = 33))$&quot;</span>),</a>
+<a class="sourceLine" id="cb29-7" data-line-number="7">       <span class="dt">title =</span> <span class="st">&quot;Насколько правдоподобны модели с разными μ, если мы наблюдаем значения 26 и 33?&quot;</span>)</a></code></pre></div>
+<p><img src="01_distributions_files/figure-html/unnamed-chunk-30-1.png" width="864" /></p>
 <p><strong>Самое важное:</strong></p>
 <ul>
 <li>вероятность — P(data|distribution)</li>
 <li>правдоподобие — L(distribution|data)</li>
 </ul>
+<div id="section-3" class="section level3">
+<h3>5.1</h3>
+<p>Посчитайте значение правдоподобия модели <span class="math inline">\(\mathcal{N}(\mu = 910,\, \sigma^{2}=150)\)</span> для встроенного датасета <code>Nile</code>.</p>
+<form name="FormThree" onsubmit="return validateFormThree()" method="post">
+<input type="text" name="answerThree"> <input type="submit" value="check">
+</form>
+<p><br></p>
 <script>
 function validateFormOne() {
     var x = document.forms["FormOne"]["answerOne"].value;
@@ -813,7 +856,18 @@ function validateFormTwo() {
         return false;
     }
 }
+function validateFormThree() {
+    var x = document.forms["FormThree"]["answerThree"].value;
+    if (x != "1.085036e-285") {
+        alert("У меня другой ответ...");
+        return false;
+    } else {
+        alert("Да, все правильно");
+        return false;
+    }
+}
 </script>
+</div>
 </div>
 
 <br><br><br>

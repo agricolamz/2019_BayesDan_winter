@@ -33,6 +33,7 @@ output:
     toc_depth: 4
     toc_float: yes
     smooth_scroll: no
+    code_folding: show
     df_print: paged
     include:
       after_body: footer.html
