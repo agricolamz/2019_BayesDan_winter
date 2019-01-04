@@ -281,7 +281,17 @@ phoible %>%
 </form><br>
 
 
-## 3. Какая вероятность
+## 3. Вопросы к апостериорному распределению
+
+> A frequentist uses impeccable logic to answer the wrong question, while a Bayesian answers the right question by making assumptions that nobody can fully believe in. (P. G. Hammer)
+
+1) попытка оценить параметр θ и какой-нибудь интервал, в котором он лежит (см. предыдущий раздел).
+2) ответить на вопросы вроде
+    * какая вероятность что значение θ больше некоторого значения $x$?
+    * какая вероятность что значение θ лежит в интервале $[x; y]$?
+    * и т. п.
+    
+И это не p-value! Это настоящие вероятности!
 
 <script>
 function validateFormOne() {
