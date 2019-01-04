@@ -73,7 +73,7 @@ chekhov %>%
   select(trunc_titles, word, average) %>% 
   ggplot(aes(average)) +
   geom_density(fill = "lightblue")+
-  geom_line(data = estimation, aes(x, density))+
+  geom_line(data = estimation, aes(x, density), color = 'red')+
   theme_bw()+
   labs(title = 'Частотность слова "не" на основе 305 рассказов А. Чехова',
        subtitle = "черной линией показано бета распределение с α = 5.283022 и β = 231.6328")

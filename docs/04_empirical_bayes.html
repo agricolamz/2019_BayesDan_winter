@@ -617,7 +617,7 @@ div.tocify {
 <a class="sourceLine" id="cb8-8" data-line-number="8"><span class="st">  </span><span class="kw">select</span>(trunc_titles, word, average) <span class="op">%&gt;%</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb8-9" data-line-number="9"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(average)) <span class="op">+</span></a>
 <a class="sourceLine" id="cb8-10" data-line-number="10"><span class="st">  </span><span class="kw">geom_density</span>(<span class="dt">fill =</span> <span class="st">&quot;lightblue&quot;</span>)<span class="op">+</span></a>
-<a class="sourceLine" id="cb8-11" data-line-number="11"><span class="st">  </span><span class="kw">geom_line</span>(<span class="dt">data =</span> estimation, <span class="kw">aes</span>(x, density))<span class="op">+</span></a>
+<a class="sourceLine" id="cb8-11" data-line-number="11"><span class="st">  </span><span class="kw">geom_line</span>(<span class="dt">data =</span> estimation, <span class="kw">aes</span>(x, density), <span class="dt">color =</span> <span class="st">&#39;red&#39;</span>)<span class="op">+</span></a>
 <a class="sourceLine" id="cb8-12" data-line-number="12"><span class="st">  </span><span class="kw">theme_bw</span>()<span class="op">+</span></a>
 <a class="sourceLine" id="cb8-13" data-line-number="13"><span class="st">  </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">&#39;Частотность слова &quot;не&quot; на основе 305 рассказов А. Чехова&#39;</span>,</a>
 <a class="sourceLine" id="cb8-14" data-line-number="14">       <span class="dt">subtitle =</span> <span class="st">&quot;черной линией показано бета распределение с α = 5.283022 и β = 231.6328&quot;</span>)</a></code></pre></div>
