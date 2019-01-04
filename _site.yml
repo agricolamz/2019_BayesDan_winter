@@ -7,7 +7,7 @@ navbar:
     menu:
     - text: 1. Распределения
       href: 01_distributions.html
-    - text: 2. Байесовский апдейт
+    - text: 2. Байесовский вывод
       href: 02_bayesian_inference.html
     - text: 3. Байесовский доверительный интервал
       href: 03_bayesian_ci.html
