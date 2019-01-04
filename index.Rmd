@@ -10,7 +10,7 @@ library(tidyverse)
 library(shiny)
 library(binom)
 library(mosaic)
-library(coda)
+library(HDInterval)
 ```
 
 ## Расписание

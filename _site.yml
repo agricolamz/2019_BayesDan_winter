@@ -13,7 +13,7 @@ navbar:
       href: 03_bayesian_ci.html
   - text: день второй
     menu:
-    - text: 4. Empirical Bayes Estimation
+    - text: 4. Эмпирическая байесовская оценка
       href: 04_empirical_bayes.html
     - text: 5. Байесовские фактор
       href: 05_bayes_factor.html
