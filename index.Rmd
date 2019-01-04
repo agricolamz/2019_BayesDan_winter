@@ -5,7 +5,7 @@ editor_options:
 
 ## Пакеты:
 
-```{r}
+```{r, message=FALSE}
 library(tidyverse)
 library(shiny)
 library(binom)
