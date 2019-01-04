@@ -81,4 +81,44 @@ chekhov %>%
 
 Полученное распределение можно использовать как априорное распределение для апдейта значений из каждого рассказа. Этот трюк и называется эмпирическая байесовская оценка.
 
+### 1.1
 
+В базе данных [Phoible](http://phoible.org/), в которой собраны фонологические инвентари в языках мира. В [датасет](https://raw.githubusercontent.com/agricolamz/2019_BayesDan_winter/master/datasets/phoible_n_consonants.csv) записано три переменных:
+
+* language --- язык;
+* consonants --- количество согласных;
+* phonemes --- количество фонем.
+
+Оцените параметры бета распределения для данных при помощи эмпирической байесовской оценки. Получив параметры априорного бета распределения, проведите байесовский апдейт для каждого языка. Посчитайте модуль разницы между апостериорных долей и изначальных долей представленной в данных. В ответе приведите модуль разницы для языка `Seneca` с точностью до трех знаков после запятой.
+
+```{r, include=FALSE}
+phoible <- read_csv("https://raw.githubusercontent.com/agricolamz/2019_BayesDan_winter/master/datasets/phoible_n_consonants.csv")
+alpha0 <- 9.300246
+beta0 <- 4.4545
+
+phoible %>% 
+  mutate(ratio = consonants/phonemes,
+         alpha = consonants + alpha0,
+         beta = phonemes - consonants + beta0,
+         posterior_mean = alpha/(alpha+beta),
+         diff = round(abs(posterior_mean - ratio), 3)) %>% 
+  filter(language == "Acoli")
+```
+
+<form name="FormOne" onsubmit="return validateFormOne()" method="post">
+<input type="text" name="answerOne">
+<input type="submit" value="check">
+</form><br>
+
+<script>
+function validateFormOne() {
+    var x = document.forms["FormOne"]["answerOne"].value;
+    if (x != "0.029") {
+        alert("У меня другой ответ...");
+        return false;
+    } else {
+        alert("Да, все правильно");
+        return false;
+    }
+}
+</script>

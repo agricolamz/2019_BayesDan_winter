@@ -12,7 +12,7 @@
 <meta name="author" content="Г. Мороз" />
 
 
-<title>1. Эмпирическая байесовская оценка</title>
+<title>4. Эмпирическая байесовская оценка</title>
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -553,7 +553,7 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">1. Эмпирическая байесовская оценка</h1>
+<h1 class="title toc-ignore">4. Эмпирическая байесовская оценка</h1>
 <h4 class="author"><em>Г. Мороз</em></h4>
 
 </div>
@@ -623,6 +623,32 @@ div.tocify {
 <a class="sourceLine" id="cb8-14" data-line-number="14">       <span class="dt">subtitle =</span> <span class="st">&quot;черной линией показано бета распределение с α = 5.283022 и β = 231.6328&quot;</span>)</a></code></pre></div>
 <p><img src="04_empirical_bayes_files/figure-html/unnamed-chunk-5-1.png" width="864" /></p>
 <p>Полученное распределение можно использовать как априорное распределение для апдейта значений из каждого рассказа. Этот трюк и называется эмпирическая байесовская оценка.</p>
+<div id="section" class="section level3">
+<h3>1.1</h3>
+<p>В базе данных <a href="http://phoible.org/">Phoible</a>, в которой собраны фонологические инвентари в языках мира. В <a href="https://raw.githubusercontent.com/agricolamz/2019_BayesDan_winter/master/datasets/phoible_n_consonants.csv">датасет</a> записано три переменных:</p>
+<ul>
+<li>language — язык;</li>
+<li>consonants — количество согласных;</li>
+<li>phonemes — количество фонем.</li>
+</ul>
+<p>Оцените параметры бета распределения для данных при помощи эмпирической байесовской оценки. Получив параметры априорного бета распределения, проведите байесовский апдейт для каждого языка. Посчитайте модуль разницы между апостериорных долей и изначальных долей представленной в данных. В ответе приведите модуль разницы для языка <code>Seneca</code> с точностью до трех знаков после запятой.</p>
+<form name="FormOne" onsubmit="return validateFormOne()" method="post">
+<input type="text" name="answerOne"> <input type="submit" value="check">
+</form>
+<p><br></p>
+<script>
+function validateFormOne() {
+    var x = document.forms["FormOne"]["answerOne"].value;
+    if (x != "0.029") {
+        alert("У меня другой ответ...");
+        return false;
+    } else {
+        alert("Да, все правильно");
+        return false;
+    }
+}
+</script>
+</div>
 </div>
 
 <br><br><br>
