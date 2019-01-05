@@ -646,7 +646,7 @@ div.tocify {
 </div>
 <div id="-" class="section level3">
 <h3>2.3 Распределение Пуасона</h3>
-<p>Распределение Пуассона — распределение число событий, произошедших за фиксированное время, при условии, что данные события происходят с некоторой фиксированной средней интенсивностью (<span class="math inline">\(\lambda\)</span>) и независимы друг от друга.</p>
+<p>Распределение Пуассона — распределение числа событий, произошедших за фиксированное время при условии, что данные события происходят с некоторой фиксированной средней интенсивностью (<span class="math inline">\(\lambda\)</span>) и независимы друг от друга.</p>
 <p><span class="math display">\[P(Y = k) = \frac{\lambda^k}{k!} \times e^{-\lambda}\]</span> <span class="math display">\[k\in\{1, 2, \dots\}, \lambda \in \{0, -\infty\}\]</span></p>
 <div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" data-line-number="1"><span class="kw">data_frame</span>(<span class="dt">x =</span> <span class="dv">0</span><span class="op">:</span><span class="dv">50</span>,</a>
 <a class="sourceLine" id="cb12-2" data-line-number="2">           <span class="dt">density =</span> <span class="kw">dpois</span>(<span class="dt">x =</span> x, <span class="dt">lambda =</span>  <span class="dv">5</span>)) <span class="op">%&gt;%</span><span class="st"> </span></a>
