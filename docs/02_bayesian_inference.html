@@ -624,7 +624,7 @@ div.tocify {
 <p>Биномиальные данные возникают, когда нас интересует доля успехов в какой-то серии эксперементов Бернулли.</p>
 <div id="-" class="section level3">
 <h3>3.1 Биномиальное распределение</h3>
-<p>Биномиальное распределение — распределение количетсва успехов эксперементов Бернулли из <em>n</em> попыток с вероятностью успеха <em>p</em>.</p>
+<p>Биномиальное распределение — распределение количества успехов эксперементов Бернулли из <em>n</em> попыток с вероятностью успеха <em>p</em>.</p>
 <p><span class="math display">\[P(k | n, p) = \frac{n!}{k!(n-k)!} \times p^k \times (1-p)^{n-k} =  {n \choose k} \times p^k \times (1-p)^{n-k}\]</span> <span class="math display">\[ 0 \leq p \leq 1; n, k &gt; 0\]</span></p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="kw">data_frame</span>(<span class="dt">x =</span> <span class="dv">0</span><span class="op">:</span><span class="dv">50</span>,</a>
 <a class="sourceLine" id="cb5-2" data-line-number="2">           <span class="dt">density =</span> <span class="kw">dbinom</span>(<span class="dt">x =</span> x, <span class="dt">size =</span> <span class="dv">50</span>, <span class="dt">prob =</span> <span class="fl">0.16</span>)) <span class="op">%&gt;%</span><span class="st"> </span></a>
@@ -649,7 +649,7 @@ div.tocify {
 <p>Можно поиграть с разными параметрами:</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1">shiny<span class="op">::</span><span class="kw">runGitHub</span>(<span class="st">&quot;agricolamz/beta_distribution_shiny&quot;</span>) </a></code></pre></div>
 <p><span class="math display">\[\mu = \frac{\alpha}{\alpha+\beta}\]</span></p>
-<p><span class="math display">\[\sigma = \frac{\alpha\times\beta}{(\alpha+\beta)^2\times(\alpha+\beta+1)}\]</span></p>
+<p><span class="math display">\[\sigma^2 = \frac{\alpha\times\beta}{(\alpha+\beta)^2\times(\alpha+\beta+1)}\]</span></p>
 </div>
 <div id="---" class="section level3">
 <h3>3.3 Байесовский апдейт биномиальных данных</h3>
@@ -687,7 +687,7 @@ div.tocify {
 <input type="text" name="answerTwo"> <input type="submit" value="check">
 </form>
 <p><br></p>
-<p>Проведите байесовский апдейт наблюдений каждого языка, используя в качестве априорного распределения бета распределение с параметрами α = 9.300246, и β = 4.4545. Посчитайте модуль разницы между апостериорной долей и изначальной долей представленной в данных. В ответе укажите язык с наибольшей разницей.</p>
+<p>Проведите байесовский апдейт наблюдений каждого языка, используя в качестве априорного распределения бета распределение с параметрами α = 9.300246, и β = 4.4545. Посчитайте модуль разницы между апостериорной и изначальной долями согласных, представленных в данных. В ответе укажите язык с наибольшей разницей.</p>
 <form name="FormThree" onsubmit="return validateFormThree()" method="post">
 <input type="text" name="answerThree"> <input type="submit" value="check">
 </form>
@@ -696,7 +696,7 @@ div.tocify {
 </div>
 <div id="-" class="section level2">
 <h2>4. Нормальное распределение</h2>
-<p>Встроенный датасет <code>ChickWeight</code> содержит вес цыплят (<code>weight</code>) в зависимости от типа диеты (<code>Diet</code>). Мы будем анализировать 20 дневных птенцов.</p>
+<p>Встроенный датасет <code>ChickWeight</code> содержит вес цыплят (<code>weight</code>) в зависимости от типа диеты (<code>Diet</code>). Мы будем анализировать 20-дневных птенцов.</p>
 <div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1">ChickWeight <span class="op">%&gt;%</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb10-2" data-line-number="2"><span class="st">  </span><span class="kw">filter</span>(Time <span class="op">==</span><span class="st"> </span><span class="dv">20</span>) -&gt;</a>
 <a class="sourceLine" id="cb10-3" data-line-number="3"><span class="st">  </span>chicks</a>
@@ -743,7 +743,7 @@ div.tocify {
 <a class="sourceLine" id="cb13-3" data-line-number="3"><span class="st">  </span><span class="kw">gather</span>(type, probability, prior<span class="op">:</span>posterior) <span class="op">%&gt;%</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb13-4" data-line-number="4"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(mu, probability, <span class="dt">color =</span> type))<span class="op">+</span></a>
 <a class="sourceLine" id="cb13-5" data-line-number="5"><span class="st">  </span><span class="kw">geom_point</span>()<span class="op">+</span></a>
-<a class="sourceLine" id="cb13-6" data-line-number="6"><span class="st">  </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">&quot;изменеие вероятностей для каждой из моделей&quot;</span>,</a>
+<a class="sourceLine" id="cb13-6" data-line-number="6"><span class="st">  </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">&quot;изменение вероятностей для каждой из моделей&quot;</span>,</a>
 <a class="sourceLine" id="cb13-7" data-line-number="7">       <span class="dt">x =</span> <span class="st">&quot;μ&quot;</span>)</a></code></pre></div>
 <p><img src="02_bayesian_inference_files/figure-html/unnamed-chunk-15-1.png" width="864" /></p>
 </div>

@@ -585,7 +585,7 @@ div.tocify {
 <a class="sourceLine" id="cb5-4" data-line-number="4"><span class="st">  </span><span class="kw">geom_point</span>()<span class="op">+</span></a>
 <a class="sourceLine" id="cb5-5" data-line-number="5"><span class="st">  </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">&quot;CDF нормального распределения (μ = 50, sd = 10)&quot;</span>)</a></code></pre></div>
 <p><img src="01_distributions_files/figure-html/unnamed-chunk-3-1.png" width="864" /></p>
-<p>Какое значение соответствует 40% квантили?</p>
+<p>Какое значение соответствует 40-ой квантили?</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="kw">qnorm</span>(<span class="fl">0.4</span>, <span class="dt">mean =</span> <span class="dv">50</span>, <span class="dt">sd =</span> <span class="dv">10</span>)</a></code></pre></div>
 <pre><code>[1] 47.46653</code></pre>
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1"><span class="kw">data_frame</span>(<span class="dt">quantiles =</span> <span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dt">by =</span> <span class="fl">0.01</span>),</a>
@@ -793,19 +793,19 @@ div.tocify {
 </div>
 <div id="-vs.-" class="section level2">
 <h2>5. Вероятность vs. функция правдободобия</h2>
-<p>Предположим что распределение количества согласных в языках мира можно описать нормальным распределением со средним 22, и стандартным отклонением 6:</p>
+<p>Предположим что распределение количества согласных в языках мира можно описать нормальным распределением со средним 22 и стандартным отклонением 6:</p>
 <p><img src="01_distributions_files/figure-html/unnamed-chunk-24-1.png" width="864" /></p>
-<p>Тогда вероятность того, что в выбранных произвольно языках окажется от 23 до 32 согласных равна интегралу нормального распределения в указанном промежутке:</p>
+<p>Тогда вероятность того, что в выбранных произвольно языках окажется от 23 до 32 согласных, равна интегралу нормального распределения в указанном промежутке:</p>
 <p><img src="01_distributions_files/figure-html/unnamed-chunk-25-1.png" width="864" /></p>
 <p><span class="math display">\[P\left(X \in (23,\, 32) | X \sim \mathcal{N}(\mu = 22,\, \sigma^{2}=6)\right) = ...\]</span></p>
 <div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb24-1" data-line-number="1"><span class="kw">pnorm</span>(<span class="dv">32</span>, <span class="dt">mean =</span> <span class="dv">22</span>, <span class="dt">sd =</span> <span class="dv">6</span>) <span class="op">-</span><span class="st"> </span><span class="kw">pnorm</span>(<span class="dv">23</span>, <span class="dt">mean =</span> <span class="dv">22</span>, <span class="dt">sd =</span> <span class="dv">6</span>)</a></code></pre></div>
 <pre><code>[1] 0.3860258</code></pre>
-<p>Когда мы говорим про функцию правдоподобия, то мы уже нашли еще один язык в котором оказалось 33 согласных. Нас интересует, насколько правдоподобна функция нормального распределения со средним 22 и стандартным отклонением 6 при значении переменной 33. Это значение равно функции плотности:</p>
+<p>Когда мы говорим про функцию правдоподобия, мы нашли еще один язык в котором оказалось 33 согласных, и нас интересует, насколько правдоподобна функция нормального распределения со средним 22 и стандартным отклонением 6 при значении переменной 33. Это значение равно функции плотности:</p>
 <p><img src="01_distributions_files/figure-html/unnamed-chunk-27-1.png" width="864" /></p>
 <p><span class="math display">\[L\left(X \sim \mathcal{N}(\mu = 22,\, \sigma^{2}=6)|x = 33\right) = ...\]</span></p>
 <div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb26-1" data-line-number="1"><span class="kw">dnorm</span>(<span class="dv">33</span>, <span class="dv">22</span>, <span class="dv">6</span>)</a></code></pre></div>
 <pre><code>[1] 0.01238519</code></pre>
-<p>В результате мы можем пострить график, который будет правдоподобие моделей с разными средними и фиксированным стандартным отклонением.</p>
+<p>В результате мы можем пострить график, на котором будет правдоподобие моделей с разными средними и фиксированным стандартным отклонением.</p>
 <div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb28-1" data-line-number="1"><span class="kw">data_frame</span>(<span class="dt">x =</span> <span class="dv">0</span><span class="op">:</span><span class="dv">80</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb28-2" data-line-number="2"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(x)) <span class="op">+</span></a>
 <a class="sourceLine" id="cb28-3" data-line-number="3"><span class="st">  </span><span class="kw">stat_function</span>(<span class="dt">fun =</span> <span class="cf">function</span>(x) <span class="kw">dnorm</span>(<span class="dv">33</span>, x, <span class="dv">6</span>))<span class="op">+</span></a>
