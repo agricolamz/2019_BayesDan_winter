@@ -296,7 +296,7 @@ phoible %>%
 <script>
 function validateFormOne() {
     var x = document.forms["FormOne"]["answerOne"].value;
-    if (x != "5.868759") {
+    if (x != "5.87") {
         alert("У меня другой ответ...");
         return false;
     } else {
