@@ -5,12 +5,11 @@ editor_options:
 
 ## Пакеты:
 
-```{r, message=FALSE}
-library(tidyverse)
-library(shiny)
-library(binom)
-library(mosaic)
-library(HDInterval)
+```{r}
+pkg <- c("tidyverse", "shiny", "binom", "mosaic", "HDInterval", "markovchain")
+pkg <- pkg[!(pkg %in% installed.packages()[, "Package"])]
+if (length(pkg)){
+  install.packages(pkg, dependencies = TRUE)}
 ```
 
 ## Расписание

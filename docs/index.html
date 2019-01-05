@@ -558,11 +558,10 @@ div.tocify {
 
 <div class="section level2">
 <h2>Пакеты:</h2>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw">library</span>(tidyverse)</a>
-<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="kw">library</span>(shiny)</a>
-<a class="sourceLine" id="cb1-3" data-line-number="3"><span class="kw">library</span>(binom)</a>
-<a class="sourceLine" id="cb1-4" data-line-number="4"><span class="kw">library</span>(mosaic)</a>
-<a class="sourceLine" id="cb1-5" data-line-number="5"><span class="kw">library</span>(HDInterval)</a></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1">pkg &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;tidyverse&quot;</span>, <span class="st">&quot;shiny&quot;</span>, <span class="st">&quot;binom&quot;</span>, <span class="st">&quot;mosaic&quot;</span>, <span class="st">&quot;HDInterval&quot;</span>, <span class="st">&quot;markovchain&quot;</span>)</a>
+<a class="sourceLine" id="cb1-2" data-line-number="2">pkg &lt;-<span class="st"> </span>pkg[<span class="op">!</span>(pkg <span class="op">%in%</span><span class="st"> </span><span class="kw">installed.packages</span>()[, <span class="st">&quot;Package&quot;</span>])]</a>
+<a class="sourceLine" id="cb1-3" data-line-number="3"><span class="cf">if</span> (<span class="kw">length</span>(pkg)){</a>
+<a class="sourceLine" id="cb1-4" data-line-number="4">  <span class="kw">install.packages</span>(pkg, <span class="dt">dependencies =</span> <span class="ot">TRUE</span>)}</a></code></pre></div>
 </div>
 <div class="section level2">
 <h2>Расписание</h2>
