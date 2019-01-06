@@ -511,7 +511,7 @@ div.tocify {
       <a href="05_bayes_factor.html">5. Байесовские фактор</a>
     </li>
     <li>
-      <a href="06_mcmc.html">6. Введение в MCMC</a>
+      <a href="06_mc.html">6. Введение в MC</a>
     </li>
   </ul>
 </li>
@@ -566,33 +566,33 @@ div.tocify {
 <h3>1.1 Простой случай</h3>
 <p>В нашем курсе мы обсуждали несколько рандомизаторов (<code>rnorm()</code>, <code>rbeta()</code> и так далее). Но вернемся к более простому случаю. Сделаем одну выборку из множества, содержащего три элемента:</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw">sample</span>(<span class="dt">x =</span> <span class="dv">5</span><span class="op">:</span><span class="dv">7</span>)</a></code></pre></div>
-<pre><code>[1] 6 7 5</code></pre>
+<pre><code>[1] 6 5 7</code></pre>
 <p>По умолчанию он выдает множество равное количество объектов в векторе.</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="kw">sample</span>(<span class="dt">x =</span> <span class="dv">5</span><span class="op">:</span><span class="dv">7</span>, <span class="dt">size =</span> <span class="dv">1</span>)</a></code></pre></div>
 <pre><code>[1] 6</code></pre>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="kw">sample</span>(<span class="dt">x =</span> <span class="dv">5</span><span class="op">:</span><span class="dv">7</span>, <span class="dt">size =</span> <span class="dv">4</span>)</a></code></pre></div>
 <pre><code>Error in sample.int(length(x), size, replace, prob): cannot take a sample larger than the population when &#39;replace = FALSE&#39;</code></pre>
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1"><span class="kw">sample</span>(<span class="dt">x =</span> <span class="dv">5</span><span class="op">:</span><span class="dv">7</span>, <span class="dt">size =</span> <span class="dv">4</span>, <span class="dt">replace =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
-<pre><code>[1] 6 6 6 7</code></pre>
+<pre><code>[1] 5 7 5 7</code></pre>
 <p>Можно задавать вероятности, с которыми рандомизатора вынимает то или иное значение (по умолчанию все исходы равновероятны):</p>
 <div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1"><span class="kw">sample</span>(<span class="dt">x =</span> <span class="dv">5</span><span class="op">:</span><span class="dv">7</span>, <span class="dt">size =</span> <span class="dv">10000</span>, <span class="dt">replace =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb10-2" data-line-number="2"><span class="st">  </span><span class="kw">table</span>() <span class="op">%&gt;%</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb10-3" data-line-number="3"><span class="st">  </span><span class="kw">prop.table</span>()</a></code></pre></div>
 <pre><code>.
      5      6      7 
-0.3304 0.3326 0.3370 </code></pre>
+0.3331 0.3375 0.3294 </code></pre>
 <div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" data-line-number="1"><span class="kw">sample</span>(<span class="dt">x =</span> <span class="dv">5</span><span class="op">:</span><span class="dv">7</span>, <span class="dt">size =</span> <span class="dv">10000</span>, <span class="dt">replace =</span> <span class="ot">TRUE</span>, </a>
 <a class="sourceLine" id="cb12-2" data-line-number="2">       <span class="dt">prob =</span> <span class="kw">c</span>(<span class="fl">0.1</span>, <span class="fl">0.3</span>, <span class="fl">0.6</span>)) <span class="op">%&gt;%</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb12-3" data-line-number="3"><span class="st">  </span><span class="kw">table</span>() <span class="op">%&gt;%</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb12-4" data-line-number="4"><span class="st">  </span><span class="kw">prop.table</span>()</a></code></pre></div>
 <pre><code>.
      5      6      7 
-0.0982 0.3083 0.5935 </code></pre>
+0.1015 0.2929 0.6056 </code></pre>
 <p>Записи идентичны:</p>
 <div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" data-line-number="1"><span class="kw">sample</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">10</span>)</a></code></pre></div>
-<pre><code> [1]  6  5  7  3  8  2  1  4  9 10</code></pre>
+<pre><code> [1]  8  4  7 10  6  2  9  3  1  5</code></pre>
 <div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" data-line-number="1"><span class="kw">sample</span>(<span class="dv">10</span>)</a></code></pre></div>
-<pre><code> [1]  2  9  6  5  3  7  8  4  1 10</code></pre>
+<pre><code> [1]  8  4  2  6 10  7  3  9  1  5</code></pre>
 <p>Чтобы фиксировать рандомизатор следует использовать <code>set.seed()</code>. Посмотрите <a href="https://benjaminlmoore.wordpress.com/2014/03/06/most-common-rng-seeds-r-github/">прекрасную работу</a> Бена Мура на тему того, какие кто использует сиды на GitHub.</p>
 <p>Иногда хочется, чтобы рандомизатор был одинаковый в R и Python, зачем и как это делать читайте в работе Гертьяна ван ден Бург: <a href="https://gertjanvandenburg.com/blog/syncrng/">блог</a>, <a href="https://github.com/GjjvdBurg/SyncRNG">гитхаб</a>.</p>
 </div>
@@ -601,14 +601,14 @@ div.tocify {
 <div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" data-line-number="1">mtcars[<span class="kw">sample</span>(<span class="kw">nrow</span>(mtcars), <span class="dv">7</span>),]</a></code></pre></div>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
-{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["mpg"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["cyl"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["disp"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["hp"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["drat"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["wt"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["qsec"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["vs"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["am"],"name":[9],"type":["dbl"],"align":["right"]},{"label":["gear"],"name":[10],"type":["dbl"],"align":["right"]},{"label":["carb"],"name":[11],"type":["dbl"],"align":["right"]}],"data":[{"1":"33.9","2":"4","3":"71.1","4":"65","5":"4.22","6":"1.835","7":"19.90","8":"1","9":"1","10":"4","11":"1","_rn_":"Toyota Corolla"},{"1":"22.8","2":"4","3":"108.0","4":"93","5":"3.85","6":"2.320","7":"18.61","8":"1","9":"1","10":"4","11":"1","_rn_":"Datsun 710"},{"1":"21.0","2":"6","3":"160.0","4":"110","5":"3.90","6":"2.875","7":"17.02","8":"0","9":"1","10":"4","11":"4","_rn_":"Mazda RX4 Wag"},{"1":"19.2","2":"8","3":"400.0","4":"175","5":"3.08","6":"3.845","7":"17.05","8":"0","9":"0","10":"3","11":"2","_rn_":"Pontiac Firebird"},{"1":"26.0","2":"4","3":"120.3","4":"91","5":"4.43","6":"2.140","7":"16.70","8":"0","9":"1","10":"5","11":"2","_rn_":"Porsche 914-2"},{"1":"19.7","2":"6","3":"145.0","4":"175","5":"3.62","6":"2.770","7":"15.50","8":"0","9":"1","10":"5","11":"6","_rn_":"Ferrari Dino"},{"1":"30.4","2":"4","3":"95.1","4":"113","5":"3.77","6":"1.513","7":"16.90","8":"1","9":"1","10":"5","11":"2","_rn_":"Lotus Europa"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["mpg"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["cyl"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["disp"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["hp"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["drat"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["wt"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["qsec"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["vs"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["am"],"name":[9],"type":["dbl"],"align":["right"]},{"label":["gear"],"name":[10],"type":["dbl"],"align":["right"]},{"label":["carb"],"name":[11],"type":["dbl"],"align":["right"]}],"data":[{"1":"27.3","2":"4","3":"79.0","4":"66","5":"4.08","6":"1.935","7":"18.90","8":"1","9":"1","10":"4","11":"1","_rn_":"Fiat X1-9"},{"1":"22.8","2":"4","3":"108.0","4":"93","5":"3.85","6":"2.320","7":"18.61","8":"1","9":"1","10":"4","11":"1","_rn_":"Datsun 710"},{"1":"15.2","2":"8","3":"275.8","4":"180","5":"3.07","6":"3.780","7":"18.00","8":"0","9":"0","10":"3","11":"3","_rn_":"Merc 450SLC"},{"1":"22.8","2":"4","3":"140.8","4":"95","5":"3.92","6":"3.150","7":"22.90","8":"1","9":"0","10":"4","11":"2","_rn_":"Merc 230"},{"1":"26.0","2":"4","3":"120.3","4":"91","5":"4.43","6":"2.140","7":"16.70","8":"0","9":"1","10":"5","11":"2","_rn_":"Porsche 914-2"},{"1":"18.7","2":"8","3":"360.0","4":"175","5":"3.15","6":"3.440","7":"17.02","8":"0","9":"0","10":"3","11":"2","_rn_":"Hornet Sportabout"},{"1":"30.4","2":"4","3":"95.1","4":"113","5":"3.77","6":"1.513","7":"16.90","8":"1","9":"1","10":"5","11":"2","_rn_":"Lotus Europa"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 <div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" data-line-number="1">mtcars <span class="op">%&gt;%</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb19-2" data-line-number="2"><span class="st">  </span><span class="kw">sample_n</span>(<span class="dv">7</span>)</a></code></pre></div>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
-{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["mpg"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["cyl"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["disp"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["hp"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["drat"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["wt"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["qsec"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["vs"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["am"],"name":[9],"type":["dbl"],"align":["right"]},{"label":["gear"],"name":[10],"type":["dbl"],"align":["right"]},{"label":["carb"],"name":[11],"type":["dbl"],"align":["right"]}],"data":[{"1":"30.4","2":"4","3":"75.7","4":"52","5":"4.93","6":"1.615","7":"18.52","8":"1","9":"1","10":"4","11":"2","_rn_":"Honda Civic"},{"1":"24.4","2":"4","3":"146.7","4":"62","5":"3.69","6":"3.190","7":"20.00","8":"1","9":"0","10":"4","11":"2","_rn_":"Merc 240D"},{"1":"19.2","2":"8","3":"400.0","4":"175","5":"3.08","6":"3.845","7":"17.05","8":"0","9":"0","10":"3","11":"2","_rn_":"Pontiac Firebird"},{"1":"21.4","2":"6","3":"258.0","4":"110","5":"3.08","6":"3.215","7":"19.44","8":"1","9":"0","10":"3","11":"1","_rn_":"Hornet 4 Drive"},{"1":"16.4","2":"8","3":"275.8","4":"180","5":"3.07","6":"4.070","7":"17.40","8":"0","9":"0","10":"3","11":"3","_rn_":"Merc 450SE"},{"1":"32.4","2":"4","3":"78.7","4":"66","5":"4.08","6":"2.200","7":"19.47","8":"1","9":"1","10":"4","11":"1","_rn_":"Fiat 128"},{"1":"17.3","2":"8","3":"275.8","4":"180","5":"3.07","6":"3.730","7":"17.60","8":"0","9":"0","10":"3","11":"3","_rn_":"Merc 450SL"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["mpg"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["cyl"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["disp"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["hp"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["drat"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["wt"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["qsec"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["vs"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["am"],"name":[9],"type":["dbl"],"align":["right"]},{"label":["gear"],"name":[10],"type":["dbl"],"align":["right"]},{"label":["carb"],"name":[11],"type":["dbl"],"align":["right"]}],"data":[{"1":"10.4","2":"8","3":"472.0","4":"205","5":"2.93","6":"5.25","7":"17.98","8":"0","9":"0","10":"3","11":"4","_rn_":"Cadillac Fleetwood"},{"1":"15.2","2":"8","3":"275.8","4":"180","5":"3.07","6":"3.78","7":"18.00","8":"0","9":"0","10":"3","11":"3","_rn_":"Merc 450SLC"},{"1":"14.3","2":"8","3":"360.0","4":"245","5":"3.21","6":"3.57","7":"15.84","8":"0","9":"0","10":"3","11":"4","_rn_":"Duster 360"},{"1":"21.0","2":"6","3":"160.0","4":"110","5":"3.90","6":"2.62","7":"16.46","8":"0","9":"1","10":"4","11":"4","_rn_":"Mazda RX4"},{"1":"32.4","2":"4","3":"78.7","4":"66","5":"4.08","6":"2.20","7":"19.47","8":"1","9":"1","10":"4","11":"1","_rn_":"Fiat 128"},{"1":"16.4","2":"8","3":"275.8","4":"180","5":"3.07","6":"4.07","7":"17.40","8":"0","9":"0","10":"3","11":"3","_rn_":"Merc 450SE"},{"1":"21.4","2":"4","3":"121.0","4":"109","5":"4.11","6":"2.78","7":"18.60","8":"1","9":"1","10":"4","11":"2","_rn_":"Volvo 142E"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 <div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" data-line-number="1"><span class="kw">library</span>(data.table)</a>
@@ -632,7 +632,7 @@ div.tocify {
 <a class="sourceLine" id="cb21-6" data-line-number="6">whether <span class="op">%&gt;%</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb21-7" data-line-number="7"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(date, events))<span class="op">+</span></a>
 <a class="sourceLine" id="cb21-8" data-line-number="8"><span class="st">  </span><span class="kw">geom_point</span>()</a></code></pre></div>
-<p><img src="06_mcmc_files/figure-html/unnamed-chunk-8-1.png" width="864" /></p>
+<p><img src="06_mc_files/figure-html/unnamed-chunk-8-1.png" width="864" /></p>
 <p>Давайте считать, что <code>NA</code> — это солнце.</p>
 <div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" data-line-number="1">whether <span class="op">%&gt;%</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb22-2" data-line-number="2"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">events =</span> <span class="kw">ifelse</span>(<span class="kw">is.na</span>(events), <span class="st">&quot;Sun&quot;</span>, events)) -&gt;</a>
@@ -641,7 +641,7 @@ div.tocify {
 <a class="sourceLine" id="cb22-5" data-line-number="5">whether<span class="op">%&gt;%</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb22-6" data-line-number="6"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(date, events))<span class="op">+</span></a>
 <a class="sourceLine" id="cb22-7" data-line-number="7"><span class="st">  </span><span class="kw">geom_point</span>()</a></code></pre></div>
-<p><img src="06_mcmc_files/figure-html/unnamed-chunk-9-1.png" width="864" /></p>
+<p><img src="06_mc_files/figure-html/unnamed-chunk-9-1.png" width="864" /></p>
 <p>Визуализируем частоты разных погодных событий в Сан Диего:</p>
 <div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb23-1" data-line-number="1">whether <span class="op">%&gt;%</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb23-2" data-line-number="2"><span class="st">  </span><span class="kw">count</span>(events) <span class="op">%&gt;%</span><span class="st"> </span></a>
@@ -649,7 +649,7 @@ div.tocify {
 <a class="sourceLine" id="cb23-4" data-line-number="4"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(events, n))<span class="op">+</span></a>
 <a class="sourceLine" id="cb23-5" data-line-number="5"><span class="st">  </span><span class="kw">geom_col</span>(<span class="dt">fill =</span> <span class="st">&quot;lightblue&quot;</span>)<span class="op">+</span></a>
 <a class="sourceLine" id="cb23-6" data-line-number="6"><span class="st">  </span><span class="kw">coord_flip</span>()</a></code></pre></div>
-<p><img src="06_mcmc_files/figure-html/unnamed-chunk-10-1.png" width="864" /></p>
+<p><img src="06_mc_files/figure-html/unnamed-chunk-10-1.png" width="864" /></p>
 <p>Визуализируем матрицу последовательных переходов разных погодных событий:</p>
 <div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb24-1" data-line-number="1"><span class="kw">data_frame</span>(<span class="dt">bigramma_1 =</span> whether<span class="op">$</span>events, </a>
 <a class="sourceLine" id="cb24-2" data-line-number="2">           <span class="dt">bigramma_2 =</span> <span class="kw">lead</span>(whether<span class="op">$</span>events, <span class="dv">1</span>)) <span class="op">%&gt;%</span><span class="st"> </span></a>
@@ -661,7 +661,7 @@ div.tocify {
 <a class="sourceLine" id="cb24-8" data-line-number="8"><span class="st">  </span><span class="kw">geom_point</span>()<span class="op">+</span></a>
 <a class="sourceLine" id="cb24-9" data-line-number="9"><span class="st">  </span><span class="kw">scale_fill_gradient</span>(<span class="dt">low=</span><span class="st">&quot;grey95&quot;</span>, <span class="dt">high=</span><span class="st">&quot;red&quot;</span>)<span class="op">+</span></a>
 <a class="sourceLine" id="cb24-10" data-line-number="10"><span class="st">  </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">&#39;Матрица переходов погодных событий в Сан Диего в январе&#39;</span>)</a></code></pre></div>
-<p><img src="06_mcmc_files/figure-html/unnamed-chunk-11-1.png" width="864" /></p>
+<p><img src="06_mc_files/figure-html/unnamed-chunk-11-1.png" width="864" /></p>
 <p>Сделаем маркосвкую цепь и визуализируйте ее граф:</p>
 <div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb25-1" data-line-number="1"><span class="kw">library</span>(markovchain)</a>
 <a class="sourceLine" id="cb25-2" data-line-number="2">our_mc &lt;-<span class="st"> </span><span class="kw">markovchainFit</span>(whether<span class="op">$</span>events)</a>
@@ -676,7 +676,7 @@ Rain                0.00000000 0.2222222           0.2222222 0.5555556
 Rain , Thunderstorm 0.00000000 1.0000000           0.0000000 0.0000000
 Sun                 0.05263158 0.2631579           0.0000000 0.6842105</code></pre>
 <div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb27-1" data-line-number="1"><span class="kw">plot</span>(our_mc<span class="op">$</span>estimate)</a></code></pre></div>
-<p><img src="06_mcmc_files/figure-html/unnamed-chunk-12-1.png" width="864" /></p>
+<p><img src="06_mc_files/figure-html/unnamed-chunk-12-1.png" width="864" /></p>
 <p>Теперь мы можем предсказать наше следующее состояние <span class="math inline">\(t_2\)</span> перемножив матрицу начального состояния <span class="math inline">\(t_1\)</span> (<span class="math inline">\(1 \times 4\)</span>) на матрицу переходов (<span class="math inline">\(4 \times 4\)</span>).</p>
 <p><span class="math display">\[t_2 = t_1 \times \text{transitional matrix}\]</span></p>
 <p>Предположим, что наше начальное состояние — это дождь <code>Rain</code>:</p>
@@ -745,7 +745,7 @@ Sun                 0.5722892  0.5722892  0.5722892  0.5722892 </code></pre>
 <a class="sourceLine" id="cb34-6" data-line-number="6"><span class="st">  </span>directlabels<span class="op">::</span><span class="kw">geom_dl</span>(<span class="kw">aes</span>(<span class="dt">label =</span> pos), <span class="dt">method =</span> <span class="st">&quot;last.qp&quot;</span>)<span class="op">+</span></a>
 <a class="sourceLine" id="cb34-7" data-line-number="7"><span class="st">  </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">&#39;Марковская цепь погодных событий в Сан Диего в январе&#39;</span>,</a>
 <a class="sourceLine" id="cb34-8" data-line-number="8">       <span class="dt">caption =</span> <span class="st">&quot;начальное состояние --- дождь (Rain)&quot;</span>)</a></code></pre></div>
-<p><img src="06_mcmc_files/figure-html/unnamed-chunk-15-1.png" width="864" /></p>
+<p><img src="06_mc_files/figure-html/unnamed-chunk-15-1.png" width="864" /></p>
 <p>И люди вообще-то научились вычислять такие вещи на основании цепи:</p>
 <div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb35-1" data-line-number="1"><span class="kw">steadyStates</span>(our_mc<span class="op">$</span>estimate)</a></code></pre></div>
 <pre><code>            Fog      Rain Rain , Thunderstorm       Sun
@@ -767,15 +767,15 @@ Sun                 0.5722892  0.5722892  0.5722892  0.5722892 </code></pre>
 <li><code>token</code> — слово</li>
 <li><code>POS</code> — часть речи, полученная на основе английской модели UDPIPE.</li>
 </ul>
-<p>Визуализируйте частоты частей речи в романе: <img src="06_mcmc_files/figure-html/unnamed-chunk-17-1.png" width="864" /></p>
+<p>Визуализируйте частоты частей речи в романе: <img src="06_mc_files/figure-html/unnamed-chunk-17-1.png" width="864" /></p>
 </div>
 <div id="section-1" class="section level3">
 <h3>4.2</h3>
-<p>Визуализируйте матрицу последовательных переходов частей речи: <img src="06_mcmc_files/figure-html/unnamed-chunk-18-1.png" width="864" /></p>
+<p>Визуализируйте матрицу последовательных переходов частей речи: <img src="06_mc_files/figure-html/unnamed-chunk-18-1.png" width="864" /></p>
 </div>
 <div id="section-2" class="section level3">
 <h3>4.3</h3>
-<p>Сделайте маркосвкую цепь и визуализируйте ее граф: <img src="06_mcmc_files/figure-html/unnamed-chunk-19-1.png" width="864" /></p>
+<p>Сделайте маркосвкую цепь и визуализируйте ее граф: <img src="06_mc_files/figure-html/unnamed-chunk-19-1.png" width="864" /></p>
 </div>
 <div id="section-3" class="section level3">
 <h3>4.4</h3>
@@ -799,7 +799,7 @@ Sun                 0.5722892  0.5722892  0.5722892  0.5722892 </code></pre>
 <div id="section-5" class="section level3">
 <h3>4.6</h3>
 <p>Визуализируйте 40 состояний цепи, если начальное состояние — артикль.</p>
-<p><img src="06_mcmc_files/figure-html/unnamed-chunk-23-1.png" width="864" /></p>
+<p><img src="06_mc_files/figure-html/unnamed-chunk-23-1.png" width="864" /></p>
 </div>
 <div id="section-6" class="section level3">
 <h3>4.7</h3>
