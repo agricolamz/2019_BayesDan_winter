@@ -82,7 +82,6 @@ boot_mean <- bootstrap(urine$ph, nboot = 1000, theta = mean)
 
 * количество "не" в 311 рассказов А. Чехова
 * число слов в каждом рассказе
-* 46610 уникальных слов в каждом рассказе
 
 ```{r}
 chekhov <- read_csv("https://raw.githubusercontent.com/agricolamz/2019_BayesDan_winter/master/datasets/chekhov.csv")
