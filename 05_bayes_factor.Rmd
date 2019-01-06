@@ -57,10 +57,16 @@ df %>%
   geom_col()+
   geom_text(position = position_stack(vjust = 0.5), color = "white")
 
-l_auckland <- 0.484*0.032
-l_san_diego <- 0.29*0.065
+df %>%
+  count(city, events) %>% 
+  group_by(city) %>% 
+  mutate(prop = n/sum(n)) %>% 
+  select(-n) %>% 
+  spread(events, prop, fill = 0) %>% 
+  mutate(likelihood_r_rt = `Rain , Thunderstorm` * Rain) ->
+  results
 
-BF <- l_san_diego/l_auckland
+BF <- round(results$likelihood_r_rt[5]/results$likelihood_r_rt[1], 3)
 ```
 
 <form name="FormOne" onsubmit="return validateFormOne()" method="post">
@@ -73,7 +79,7 @@ BF <- l_san_diego/l_auckland
 <script>
 function validateFormOne() {
     var x = document.forms["FormOne"]["answerOne"].value;
-    if (x != "1.217071") {
+    if (x != "1.2") {
         alert("У меня другой ответ...");
         return false;
     } else {
