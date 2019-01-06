@@ -18,7 +18,7 @@ editor_options:
 * используют полученное априорное распределение для получение апостериорной оценки для каждого наблюдения
 
 ```{r}
-chekhov <- read_tsv("https://raw.githubusercontent.com/agricolamz/2019_data_analysis_for_linguists/master/data/tidy_chekhov.tsv")
+chekhov <- read_csv("https://raw.githubusercontent.com/agricolamz/2019_BayesDan_winter/master/datasets/chekhov.csv")
 chekhov %>% 
   mutate(trunc_titles = str_trunc(titles, 25, side = "right"),
          average = n/n_words) ->
@@ -32,8 +32,6 @@ head(chekhov)
 Наши данные:
 ```{r}
 chekhov %>% 
-  filter(word == "не") %>% 
-  select(trunc_titles, word, average) %>% 
   ggplot(aes(average)) +
   geom_histogram(fill = "lightblue")+
   geom_density(color = "red")+
@@ -52,8 +50,8 @@ $$\alpha = \left(\frac{1-\mu}{\sigma^2} - \frac{1}{\mu}\right)\times \mu^2$$
 $$\beta = \alpha\times\left(\frac{1}{\mu} - 1\right)$$
 
 ```{r}
-mu <- mean(chekhov$average[chekhov$word == "не"])
-var <- var(chekhov$average[chekhov$word == "не"])
+mu <- mean(chekhov$average)
+var <- var(chekhov$average)
 alpha0 <- ((1 - mu) / var - 1 / mu) * mu ^ 2
 beta0 <- alpha0 * (1 / mu - 1)
 alpha0
@@ -68,8 +66,6 @@ estimation <- data_frame(
   density = c(dbeta(x, shape1 = alpha0, shape2 = beta0)))
 
 chekhov %>% 
-  filter(word == "не") %>% 
-  select(trunc_titles, word, average) %>% 
   ggplot(aes(average)) +
   geom_density(fill = "lightblue")+
   geom_line(data = estimation, aes(x, density), color = 'red')+
