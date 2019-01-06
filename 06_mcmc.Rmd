@@ -64,14 +64,231 @@ mtcars[sample(.N, 7)]
 * конечное количество состояний
 * вероятность переходов из одного состояния в другое
 
-### 2.1
+[Славная визуализация](http://setosa.io/blog/2014/07/26/markov-chains/index.html) (спасибо за ссылку Марине Дубовой)
+
+Возьмем наш датасет с погодой и отфильтруем только Сан Диего:
+
+```{r}
+read_csv("https://raw.githubusercontent.com/agricolamz/2019_BayesDan_winter/master/datasets/weather.csv") %>% 
+  select(city, date, events) %>% 
+  filter(city == "San Diego") ->
+  whether
+
+whether %>% 
+  ggplot(aes(date, events))+
+  geom_point()
+```
+
+Давайте считать, что `NA` --- это солнце.
+
+```{r}
+whether %>% 
+  mutate(events = ifelse(is.na(events), "Sun", events)) ->
+  whether
+
+whether%>% 
+  ggplot(aes(date, events))+
+  geom_point()
+```
+
+Визуализируем частоты разных погодных событий в Сан Диего:
+
+```{r}
+whether %>% 
+  count(events) %>% 
+  mutate(events = reorder(factor(events), n)) %>% 
+  ggplot(aes(events, n))+
+  geom_col(fill = "lightblue")+
+  coord_flip()
+```
+
+Визуализируем матрицу последовательных переходов разных погодных событий:
+```{r}
+data_frame(bigramma_1 = whether$events, 
+           bigramma_2 = lead(whether$events, 1)) %>% 
+  table() %>% 
+  prop.table() %>% 
+  as.data.frame() %>% 
+  ggplot(aes(bigramma_1, bigramma_2, size = Freq, fill = Freq))+
+  geom_raster()+
+  geom_point()+
+  scale_fill_gradient(low="grey95", high="red")+
+  labs(title = 'Матрица переходов погодных событий в Сан Диего в январе')
+```
+
+Сделаем маркосвкую цепь и визуализируйте ее граф:
+```{r, fig.height=10}
+library(markovchain)
+our_mc <- markovchainFit(whether$events)
+our_mc$estimate
+plot(our_mc$estimate)
+```
+
+Теперь мы можем предсказать наше следующее состояние $t_2$ перемножив матрицу начального состояния $t_1$ ($1 \times 4$) на матрицу переходов ($4 \times 4$).
+
+$$t_2 = t_1 \times \text{transitional matrix}$$
+
+Предположим, что наше начальное состояние --- это дождь `Rain`:
+
+```{r}
+t_1 <- matrix(c(0, 1, 0, 0), nrow = 1)
+t_1 * our_mc$estimate # это особая звездочка из пакета markovchain
+```
+
+Понятное дело состояние $t_3$ это обычное произведение состояния $t_2$ и матрицы переходов:
+
+$$t_3 = t_2 \times \text{transitional matrix} = t_1 \times \text{transitional matrix} \times \text{transitional matrix} = t_1 \times \text{transitional matrix}^2$$
+
+Используя полученную модель можно вычислите вероятность каждого из погодных событий на 7-ой день после дождя.
+```{r}
+t_1 * our_mc$estimate ^ 7 # это особые звездочка и крышечка из пакета markovchain
+```
+
+Вообще-то, часто так бывает, что цепь сходиться на каком-то состоянии (состояние эквилибриум из домашнего задания) и дальше не изменяется. Давайте Визуализируем 40 состояний цепи, если начальное состояние --- дождь.
+
+```{r}
+df <- as.data.frame(t_1)
+colnames(df) <- sort(unique(whether$events))
+
+sapply(2:40, function(x){
+  df[x,] <<- as.data.frame(as.matrix(df[1,]) * (our_mc$estimate^(x-1)))
+})
+
+df %>% 
+  mutate(stage = 1:40) %>% 
+  gather(pos, value, Fog:Sun) %>% 
+  ggplot(aes(stage, value, color = pos))+
+  geom_line(show.legend = FALSE)+
+  directlabels::geom_dl(aes(label = pos), method = "last.qp")+
+  labs(title = 'Марковская цепь погодных событий в Сан Диего в январе',
+       caption = "начальное состояние --- дождь (Rain)")
+```
+
+И люди вообще-то научились вычислять такие вещи на основании цепи:
+```{r}
+steadyStates(our_mc$estimate)
+```
+
+## 3 Что дальше?
+
+* легко придумать обобщение этой логики на непрерывные данные
+* можно придумать вариант, когда мы пытаемся предсказать некоторые ненаблюдаемые вещи на основании наблюдаемых: например, погоду в Сан Диего на основании настроение вашего друга, которому вы каждый день звоните. Это называется скрытые марковские цепи.
+
+## Задачи
+### 4.1
 Скачайте датасет, который содержит роман "По эту сторону рая" Ф. С. Фицджеральда:
 
 * `token` --- слово
-* `POS` --- часть речи
+* `POS` --- часть речи, полученная на основе английской модели UDPIPE.
 
-```{r}
+Визуализируйте частоты частей речи в романе:
+```{r, echo=FALSE}
 fitzgerald <- read_csv("https://raw.githubusercontent.com/agricolamz/2019_BayesDan_winter/master/datasets/fitzgerald_pos_annotated.csv")
+
+fitzgerald %>% 
+  count(pos) %>% 
+  mutate(pos = reorder(factor(pos), n)) %>% 
+  ggplot(aes(pos, n))+
+  geom_col(fill = "lightblue")+
+  coord_flip()+
+  labs(title = 'Частотность разных частей речи в романе Ф. С. Фитцджеральда "По эту сторону рая"')
 ```
 
-[Славная визуализация](http://setosa.io/blog/2014/07/26/markov-chains/index.html) (спасибо за ссылку Марине Дубовой)
+### 4.2
+Визуализируйте матрицу последовательных переходов частей речи:
+```{r, echo = FALSE}
+data_frame(bigramma_1 = fitzgerald$pos, 
+           bigramma_2 = lead(fitzgerald$pos, 1)) %>% 
+  table() %>% 
+  prop.table() %>% 
+  as.data.frame() %>% 
+  ggplot(aes(bigramma_1, bigramma_2, size = Freq, fill = Freq))+
+  geom_raster()+
+  geom_point()+
+  scale_fill_gradient(low="grey95", high="red")+
+  labs(title = 'Матрица переходов частей речи в романе Ф. С. Фитцджеральда "По эту сторону рая"')
+```
+
+### 4.3
+Сделайте маркосвкую цепь и визуализируйте ее граф:
+```{r, echo=FALSE, fig.height=10}
+library(markovchain)
+our_mc <- markovchainFit(fitzgerald$pos)
+plot(our_mc$estimate)
+```
+
+### 4.4
+Используя полученную модель вычислите вероятность встретить после артикля прилагательное (с точностью до трех знаков после запятой).
+
+```{r, include = FALSE}
+t_1 <- matrix(c(0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), nrow = 1)
+t_1 * our_mc$estimate # это особая звездочка из пакета markovchain
+```
+
+<form name="FormOne" onsubmit="return validateFormOne()" method="post">
+<input type="text" name="answerOne">
+<input type="submit" value="check">
+</form><br>
+
+### 4.5
+Используя полученную модель вычислите вероятность встретить после артикля прилагательное (с точностью до трех знаков после запятой).
+```{r}
+t_1 * our_mc$estimate ^ 4 # t_5 using markovchain package
+```
+
+### 4.6
+Визуализируйте 40 состояний цепи, если начальное состояние --- артикль.
+
+```{r, include = FALSE}
+df <- as.data.frame(t_1)
+colnames(df) <- sort(unique(fitzgerald$pos))
+
+sapply(2:40, function(x){
+  df[x,] <<- as.data.frame(as.matrix(df[1,]) * (our_mc$estimate^(x-1)))
+})
+```
+```{r, echo = FALSE}
+df %>% 
+  mutate(stage = 1:40) %>% 
+  gather(pos, value, ADJ:X) %>% 
+  ggplot(aes(stage, value, color = pos))+
+  geom_line(show.legend = FALSE)+
+  directlabels::geom_dl(aes(label = pos), method = "last.qp")+
+  labs(title = 'Марковская цепь для частей речи в романе Ф. С. Фитцджеральда "По эту сторону рая"',
+       caption = "начальное состояние --- артикль")
+```
+
+
+### 4.7
+Посчитайте фиксированные состояния цепи. В ответе приведите значение для местоимения (с точностью до трех знаков после запятой).
+```{r, include = FALSE}
+steadyStates(our_mc$estimate)
+```
+
+<form name="FormTwo" onsubmit="return validateFormTwo()" method="post">
+<input type="text" name="answerTwo">
+<input type="submit" value="check">
+</form><br>
+
+<script>
+function validateFormOne() {
+    var x = document.forms["FormOne"]["answerOne"].value;
+    if (x != "0.261") {
+        alert("У меня другой ответ...");
+        return false;
+    } else {
+        alert("Да, все правильно");
+        return false;
+    }
+}
+function validateFormTwo() {
+    var x = document.forms["FormTwo"]["answerTwo"].value;
+    if (x != "0.107") {
+        alert("У меня другой ответ...");
+        return false;
+    } else {
+        alert("Да, все правильно");
+        return false;
+    }
+}
+</script>
