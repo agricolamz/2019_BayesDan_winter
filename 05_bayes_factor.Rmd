@@ -45,7 +45,7 @@ $$L(grasses,\ wood|poisonous) = 0.189 \times 0.324 = 0.061236$$
 $$BF_{edible\ poisonous} = \frac{L(grasses,\ wood|edible)}{L(grasses,\ wood|poisonous)} = \frac{0.149745}{0.061236} = 2.445375$$
 
 ## 1.2 
-Вашего друга похитили а на почту отправили [датасет](https://raw.githubusercontent.com/agricolamz/2019_BayesDan_winter/master/datasets/weather.csv), в котором записаны данные о погоде из пяти городов. Ваш телефон зазвонил, и друг сказал, что не знает куда его похитили, но за окном легкий дождь (`Rain`). А на следующий день --- сильный дождь (`Rain Thunderstorm`). Посчитайте $BH_{San\_Diego\ Auckland}$
+Вашего друга похитили а на почту отправили [датасет](https://raw.githubusercontent.com/agricolamz/2019_BayesDan_winter/master/datasets/weather.csv), в котором записаны данные о погоде из пяти городов. Ваш телефон зазвонил, и друг сказал, что не знает куда его похитили, но за окном легкий дождь (`Rain`). А на следующий день --- сильный дождь (`Rain Thunderstorm`). Посчитайте $BH_{San\_Diego\ Auckland}$ с точностью до 1 знака после запятой.
 
 ```{r, include=FALSE}
 df <- read.csv("https://raw.githubusercontent.com/agricolamz/2019_BayesDan_winter/master/datasets/weather.csv")
