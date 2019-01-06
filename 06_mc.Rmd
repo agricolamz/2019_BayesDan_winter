@@ -176,7 +176,7 @@ steadyStates(our_mc$estimate)
 
 ## Задачи
 ### 4.1
-Скачайте датасет, который содержит роман "По эту сторону рая" Ф. С. Фицджеральда:
+Скачайте [датасет](https://raw.githubusercontent.com/agricolamz/2019_BayesDan_winter/master/datasets/fitzgerald_pos_annotated.csv), который содержит роман "По эту сторону рая" Ф. С. Фицджеральда:
 
 * `token` --- слово
 * `POS` --- часть речи, полученная на основе английской модели UDPIPE.
