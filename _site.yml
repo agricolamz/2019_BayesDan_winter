@@ -19,10 +19,6 @@ navbar:
       href: 05_bayes_factor.html
     - text: 6. Введение в MC
       href: 06_mc.html
-  - text: день третий
-    menu:      
-    - text: 7. Байесовская регрессия
-      href: 07_bayesian_regression.html      
   - text: введение в STAN от Марины Дубовой
     href: https://github.com/blinodelka/Baydan_2019
 output_dir: docs
